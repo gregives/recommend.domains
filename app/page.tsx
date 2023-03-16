@@ -1,91 +1,365 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from './page.module.css'
+"use client";
 
-const inter = Inter({ subsets: ['latin'] })
+import { useForm } from "react-hook-form";
+import Icon from "@mdi/react";
+import { mdiClose, mdiLoading } from "@mdi/js";
+import { Fragment, useRef, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import type { Domain } from "./api/domains/route";
+import Image from "next/image";
+import namecheapLogo from "@/images/namecheap.svg";
+import domaincomLogo from "@/images/domaincom.svg";
+import googleLogo from "@/images/google.svg";
+import godaddyLogo from "@/images/godaddy.svg";
+
+const placeholders = Array.from({ length: 5 }, () =>
+  Math.floor(Math.random() * 100)
+);
 
 export default function Home() {
+  const [loadingInitial, setLoadingInitial] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const domains = useRef<Domain[]>([]);
+
+  const [slideOverOpen, setSlideOverOpen] = useState(false);
+  const [selectedDomain, setSelectedDomain] = useState<Domain>();
+
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      description: "",
+    },
+  });
+
+  const onSubmit = handleSubmit(async ({ description }) => {
+    if (domains.current.length === 0) {
+      setLoadingInitial(true);
+    } else {
+      setLoadingMore(true);
+    }
+
+    const newDomains: Domain[] = await fetch("/api/domains", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        description,
+      }),
+    }).then((response) => response.json());
+
+    if (domains.current.length === 0) {
+      setLoadingInitial(false);
+    } else {
+      setLoadingMore(false);
+    }
+
+    domains.current = [
+      ...domains.current,
+      ...newDomains.filter(
+        ({ domain: newDomain }) =>
+          domains.current.find(({ domain }) => domain === newDomain) ===
+          undefined
+      ),
+    ];
+  });
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main>
+      <section className="relative isolate px-6 pt-14 lg:px-8">
+        <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
+          <svg
+            className="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
+            viewBox="0 0 1155 678"
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+            <path
+              fill="url(#45de2b6b-92d5-4d68-a6a0-9b9b2abad533)"
+              fillOpacity=".3"
+              d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
             />
-          </a>
+            <defs>
+              <linearGradient
+                id="45de2b6b-92d5-4d68-a6a0-9b9b2abad533"
+                x1="1155.49"
+                x2="-78.208"
+                y1=".177"
+                y2="474.645"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="#9089FC" />
+                <stop offset={1} stopColor="#FF80B5" />
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
+        <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
+          <div className="flex flex-col items-center text-center">
+            <div className="hidden sm:mb-8 sm:flex sm:justify-center">
+              <div className="relative rounded-full py-1 px-3 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+                More than 10,000 domain names generated
+              </div>
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl font-display">
+              Find the{" "}
+              <span className="text-indigo-600">perfect domain name</span> for
+              your next project
+            </h1>
+            <p className="max-w-3xl mt-10 mb-16 leading-7 md:leading-8 text-gray-600">
+              Describe your website and we’ll generate a list of domain names
+              for you to choose from, only the available ones of course! Find
+              your perfect domain name today{" "}
+              <strong className="font-semibold">for free</strong>.
+            </p>
+            <form className="w-full">
+              <label htmlFor="description" className="sr-only">
+                Description
+              </label>
+              <input
+                id="description"
+                className="block w-full px-4 py-3 md:px-6 md:py-4 rounded-xl border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                maxLength={200}
+                placeholder="Website to sell handmade jewelry"
+                {...register("description", {
+                  maxLength: 200,
+                })}
+              />
+              <button
+                type="button"
+                className="flex justify-center items-center shadow-xl shadow-indigo-600/30 w-full mt-8 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 enabled:hover:from-purple-400 enabled:hover:to-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 disabled:opacity-80"
+                disabled={loadingInitial}
+                onClick={() => {
+                  domains.current = [];
+                  onSubmit();
+                }}
+              >
+                {loadingInitial && (
+                  <Icon
+                    className="animate-spin mr-8"
+                    path={mdiLoading}
+                    size="1.2em"
+                  />
+                )}
+                Find my perfect domain name
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
+        <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
+          <svg
+            className="relative left-[calc(50%+3rem)] h-[21.1875rem] max-w-none -translate-x-1/2 sm:left-[calc(50%+36rem)] sm:h-[42.375rem]"
+            viewBox="0 0 1155 678"
+          >
+            <path
+              fill="url(#ecb5b0c9-546c-4772-8c71-4d3f06d544bc)"
+              fillOpacity=".3"
+              d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
+            />
+            <defs>
+              <linearGradient
+                id="ecb5b0c9-546c-4772-8c71-4d3f06d544bc"
+                x1="1155.49"
+                x2="-78.208"
+                y1=".177"
+                y2="474.645"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="#9089FC" />
+                <stop offset={1} stopColor="#FF80B5" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </section>
+      <section
+        id="results"
+        className="relative isolate px-6 lg:px-8 bg-indigo-600"
+      >
+        <div
+          className={`mx-auto max-w-4xl py-32 sm:py-48 lg:py-56 ${
+            domains.current.length === 0
+              ? "blur-xl pointer-events-none select-none"
+              : ""
+          }`}
         >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
+          <ul role="list" className="space-y-6">
+            {domains.current.map((domain) => (
+              <li
+                key={domain.domain}
+                className="rounded-xl bg-white px-4 py-3 md:px-6 md:py-4 shadow flex items-stretch sm:items-center"
+              >
+                <div className="flex-1 flex flex-col sm:flex-row justify-between mr-4">
+                  <span>{domain.domain}</span>
+                  <span className="text-gray-400 sm:text-gray-500">
+                    {domain.price !== undefined && `$${domain.price / 1000000}`}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className="-my-1 -mr-2 md:-my-2 md:-mr-4 py-2 px-4 font-display rounded-md bg-gradient-to-br from-indigo-500 to-indigo-600 enabled:hover:from-indigo-400 enabled:hover:to-indigo-500 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  onClick={() => {
+                    setSelectedDomain(domain);
+                    setSlideOverOpen(true);
+                  }}
+                >
+                  Buy
+                </button>
+              </li>
+            ))}
+          </ul>
+          {domains.current.length === 0 && (
+            <div className="space-y-6">
+              {placeholders.map((placeholder, index) => (
+                <div
+                  key={index}
+                  className="rounded-xl bg-white px-4 py-3 md:px-6 md:py-4 shadow flex items-stretch sm:items-center"
+                >
+                  <div className="flex-1">
+                    <div
+                      className="bg-black/30 h-5 my-3 max-w-md"
+                      style={{ width: placeholder + "%" }}
+                    />
+                  </div>
+                  <div className="-my-1 -mr-2 md:-my-2 md:-mr-4 py-2 px-4 font-display rounded-md bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-sm flex items-center">
+                    Buy
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <button
+            type="button"
+            className="flex justify-center items-center w-full mt-6 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br from-white/10 to-white/20 enabled:hover:from-white/20 enabled:hover:to-white/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 focus:ring-white disabled:opacity-80"
+            disabled={loadingMore || domains.current.length === 0}
+            onClick={onSubmit}
+          >
+            {loadingMore && (
+              <Icon
+                className="animate-spin mr-8"
+                path={mdiLoading}
+                size="1.2em"
+              />
+            )}
+            Generate more
+          </button>
+        </div>
+      </section>
+      <Transition.Root show={slideOverOpen} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={() => setSlideOverOpen(false)}
         >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-in-out duration-500"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in-out duration-500"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" />
+          </Transition.Child>
+          <div className="fixed inset-0 overflow-hidden">
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                <Transition.Child
+                  as={Fragment}
+                  enter="transform transition ease-in-out duration-500 sm:duration-700"
+                  enterFrom="translate-x-full"
+                  enterTo="translate-x-0"
+                  leave="transform transition ease-in-out duration-500 sm:duration-700"
+                  leaveFrom="translate-x-0"
+                  leaveTo="translate-x-full"
+                >
+                  <Dialog.Panel className="pointer-events-auto relative w-screen max-w-md">
+                    <Transition.Child
+                      as={Fragment}
+                      enter="ease-in-out duration-500"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="ease-in-out duration-500"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <div className="absolute top-0 left-0 -ml-8 flex pt-4 pr-2 sm:-ml-10 sm:pr-4">
+                        <button
+                          type="button"
+                          className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                          onClick={() => setSlideOverOpen(false)}
+                        >
+                          <span className="sr-only">Close panel</span>
+                          <Icon
+                            aria-hidden="true"
+                            path={mdiClose}
+                            size="1.5rem"
+                          />
+                        </button>
+                      </div>
+                    </Transition.Child>
+                    <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+                      <div className="px-4 sm:px-6">
+                        <Dialog.Title className="leading-6 text-gray-900">
+                          {selectedDomain?.domain}
+                        </Dialog.Title>
+                      </div>
+                      <div className="relative mt-6 flex-1 px-4 sm:px-6 space-y-4">
+                        <a
+                          target="_blank"
+                          href={`https://www.namecheap.com/domains/registration/results/?domain=${selectedDomain?.domain}`}
+                          className="block bg-gradient-to-br from-orange-100 to-orange-200 hover:from-orange-200 hover:to-orange-300 rounded-xl p-8 h-28"
+                        >
+                          <span className="sr-only">Namecheap</span>
+                          <Image
+                            className="w-full h-full object-contain"
+                            alt=""
+                            src={namecheapLogo}
+                          />
+                        </a>
+                        <a
+                          target="_blank"
+                          href={`https://www.domain.com/registration/?search=${selectedDomain?.domain}`}
+                          className="block bg-gradient-to-br from-red-100 to-red-200 hover:from-red-200 hover:to-red-300 rounded-xl p-8 h-28"
+                        >
+                          <span className="sr-only">Domain.com</span>
+                          <Image
+                            className="w-full h-full object-contain"
+                            alt=""
+                            src={domaincomLogo}
+                          />
+                        </a>
+                        <a
+                          target="_blank"
+                          href={`https://domains.google.com/registrar/search?searchTerm=${selectedDomain?.domain}`}
+                          className="block bg-gradient-to-br from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300 rounded-xl p-8 h-28"
+                        >
+                          <span className="sr-only">Google Domains</span>
+                          <Image
+                            className="w-full h-full object-contain"
+                            alt=""
+                            src={googleLogo}
+                          />
+                        </a>
+                        <a
+                          target="_blank"
+                          href={`https://uk.godaddy.com/domainsearch/find?domainToCheck=${selectedDomain?.domain}`}
+                          className="block bg-gradient-to-br from-cyan-100 to-cyan-200 hover:from-cyan-200 hover:to-cyan-300 rounded-xl p-8 h-28"
+                        >
+                          <span className="sr-only">GoDaddy</span>
+                          <Image
+                            className="w-full h-full object-contain"
+                            alt=""
+                            src={godaddyLogo}
+                          />
+                        </a>
+                      </div>
+                    </div>
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </div>
+          </div>
+        </Dialog>
+      </Transition.Root>
     </main>
-  )
+  );
 }
