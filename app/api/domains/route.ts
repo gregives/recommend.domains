@@ -65,24 +65,27 @@ setInterval(() => {
 }, 1000);
 
 export async function POST(request: Request) {
-  const { description } = await request.json();
+  const { description, limit = 20 } = await request.json();
 
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: [
       {
         role: "user",
-        content: `List some good domain names for my website. Description of my website: "${description}"`,
+        content: `List ${limit} suitable domain names for my website, no longer than 20 characters each. Description of my website: "${description}"`,
       },
     ],
   });
 
-  // Pick first choice from completion
-  const [choice] = completion.data.choices;
+  const domainNames: string[] = [];
 
-  const domainNames = [
-    ...(choice.message?.content.matchAll(domainRegex) ?? []),
-  ].map(([domainName]) => domainName.toLowerCase());
+  for (const choice of completion.data.choices) {
+    domainNames.push(
+      ...[...(choice.message?.content.matchAll(domainRegex) ?? [])]
+        .map(([domainName]) => domainName.toLowerCase())
+        .filter((domainName) => domainName.length < 25)
+    );
+  }
 
   domainNamesToCheck.push(...domainNames);
 
@@ -94,7 +97,9 @@ export async function POST(request: Request) {
 
   const availableDomains = domainNames
     .map((domainName) => domainNamesThatHaveBeenChecked[domainName])
-    .filter((domain) => domain !== undefined && domain.available);
+    .filter(
+      (domain) => domain !== undefined && domain.available && domain.definitive
+    );
 
   return NextResponse.json(availableDomains);
 }

@@ -1,19 +1,8 @@
 import "focus-visible";
 import "./globals.css";
 
+import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import { Inter, Space_Grotesk } from "next/font/google";
-import Icon from "@mdi/react";
-import {
-  mdiGithub,
-  mdiLightbulbOn,
-  mdiLightbulbOnOutline,
-  mdiLightbulbOutline,
-  mdiStar,
-  mdiStarOutline,
-  mdiThoughtBubble,
-  mdiThoughtBubbleOutline,
-  mdiWeb,
-} from "@mdi/js";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -54,14 +43,14 @@ export default function RootLayout({
           >
             <a
               href="#"
-              className="flex items-center -my-0.5 -mx-2 py-0.5 px-2 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="flex items-center -my-0.5 -mx-2 py-0.5 px-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
             >
-              <Icon className="mr-2 -ml-2" path={mdiWeb} size="1.3em" />
+              <GlobeAltIcon className="h-5 w-5 mr-2 -ml-2" aria-hidden="true" />
               recommend.domains
             </a>
             <a
               href="https://github.com/gregives/recommend.domains"
-              className="text-indigo-600 bg-gradient-to-br from-indigo-50 to-indigo-100 -my-0.5 -mx-2 py-0.5 px-2 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="text-indigo-600 bg-gradient-to-br from-indigo-50 to-indigo-100 -my-0.5 -mx-2 py-0.5 px-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
             >
               Star on GitHub
             </a>
