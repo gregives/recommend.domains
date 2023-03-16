@@ -22,7 +22,7 @@ const features = [
   {
     name: "Available domains only",
     description:
-      "We ensure that all of the domain names we suggest to you have been definitively verified with the registry to make sure that they are available. We don’t want to waste your time.",
+      "We check with GoDaddy to make sure that all of the domain names we suggest to you are available. We don’t want to waste your time.",
     icon: DocumentCheckIcon,
   },
   {

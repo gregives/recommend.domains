@@ -108,9 +108,7 @@ export async function POST(request: Request) {
 
   const availableDomains = domainNames
     .map((domainName) => domainNamesThatHaveBeenChecked[domainName])
-    .filter(
-      (domain) => domain !== undefined && domain.available && domain.definitive
-    );
+    .filter((domain) => domain !== undefined && domain.available);
 
   console.debug(availableDomains);
 
