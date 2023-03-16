@@ -62,7 +62,7 @@ function TwitterIcon(properties: JSX.IntrinsicElements["svg"]) {
 export default function Home() {
   const [loadingInitial, setLoadingInitial] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const domains = useRef<Domain[]>([]);
+  const [domains, setDomains] = useState<Domain[]>([]);
 
   const [slideOverOpen, setSlideOverOpen] = useState(false);
   const [selectedDomain, setSelectedDomain] = useState<Domain>();
@@ -87,7 +87,7 @@ export default function Home() {
     }).then((response) => response.json());
 
     setLoadingInitial(false);
-    domains.current = newDomains;
+    setDomains(newDomains);
 
     // Wait for results section to appear
     setTimeout(() => {
@@ -109,19 +109,17 @@ export default function Home() {
       },
       body: JSON.stringify({
         description,
-        limit: 50,
       }),
     }).then((response) => response.json());
 
     setLoadingMore(false);
-    domains.current = [
-      ...domains.current,
+    setDomains([
+      ...domains,
       ...newDomains.filter(
         ({ domain: newDomain }) =>
-          domains.current.find(({ domain }) => domain === newDomain) ===
-          undefined
+          domains.find(({ domain }) => domain === newDomain) === undefined
       ),
-    ];
+    ]);
   });
 
   return (
@@ -187,10 +185,7 @@ export default function Home() {
                 type="button"
                 className="flex justify-center items-center shadow-xl shadow-indigo-600/30 w-full mt-8 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 enabled:hover:from-purple-400 enabled:hover:to-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-600 disabled:opacity-80"
                 disabled={loadingInitial}
-                onClick={() => {
-                  domains.current = [];
-                  loadInitialDomains();
-                }}
+                onClick={loadInitialDomains}
               >
                 {loadingInitial && (
                   <ArrowPathIcon className="animate-spin mr-8 w-[1.2em] h-[1.2em]" />
@@ -226,11 +221,11 @@ export default function Home() {
           </svg>
         </div>
       </section>
-      {domains.current.length > 0 && (
+      {domains.length > 0 && (
         <section id="results" className="relative px-6 lg:px-8 bg-indigo-600">
           <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
             <ul role="list" className="space-y-6">
-              {domains.current.map((domain) => (
+              {domains.map((domain) => (
                 <li
                   key={domain.domain}
                   className="rounded-xl bg-white px-4 py-3 md:px-6 md:py-4 shadow flex items-stretch sm:items-center"
@@ -258,7 +253,7 @@ export default function Home() {
             <button
               type="button"
               className="flex justify-center items-center w-full mt-6 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br from-white/10 to-white/20 enabled:hover:from-white/20 enabled:hover:to-white/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-600 focus-visible:ring-white disabled:opacity-80"
-              disabled={loadingMore || domains.current.length === 0}
+              disabled={loadingMore}
               onClick={loadMoreDomains}
             >
               {loadingMore && (
