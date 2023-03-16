@@ -1,38 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+[![Screenshot of recommend.domains](./images/screenshot.png)](https://recommend.domains)
 
-## Getting Started
+# [recommend.domains](https://recommend.domains)
 
-First, run the development server:
+Find the perfect domain name for your next project using [ChatGPT](https://openai.com/blog/chatgpt) and the [GoDaddy API](https://developer.godaddy.com/). Built using [Next.js](https://nextjs.org/) 13, [Tailwind](https://tailwindcss.com/) and deployed on [Vercel](https://vercel.com/).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+## Run locally
+
+### Clone the repository
+
+```sh
+git clone https://github.com/gregives/recommend.domains
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Create an OpenAI API key
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Log in or sign up at https://platform.openai.com/
+2. Click on your profile photo in the top right
+3. View API keys
+4. Create new secret key
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Create a `.env` file
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+1. Create a file called `.env.local` in the root of the repository
+2. Paste your OpenAPI secret key into the `.env.local` file in this format:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```env
+OPENAI_API_KEY=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
+```
 
-## Learn More
+### Create API key and secret for GoDaddy
 
-To learn more about Next.js, take a look at the following resources:
+1. Log in or sign up at https://developer.godaddy.com/
+2. Click API Keys in the menu
+3. Create New API Key
+4. Choose the `ote` environment
+5. Paste the key and secret into the `.env.local` file:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+OPENAI_API_KEY=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
+GODADDY_URL=https://api.ote-godaddy.com
+GODADDY_API_KEY=3mM44UcgtKAewW_5rDWLN1QsnNhxD1uJ2kL55
+GODADDY_API_SECRET=UWAVgpM1kvWhkbCsvZfYhp
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Install dependencies
 
-## Deploy on Vercel
+```sh
+yarn
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Run the website locally
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```sh
+yarn dev
+```
+
+You should now be able to head to http://localhost:3000 and see the recommend.domains website.
+
+## Contributions
+
+If there's a change you'd like to make to the recommend.domains website, such as adding new features, I'd love for you to open a pull request and I'll take a look!
