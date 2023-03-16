@@ -2,6 +2,7 @@ import "focus-visible";
 import "./globals.css";
 
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
+import { Analytics } from "@vercel/analytics/react";
 import { Inter, Space_Grotesk } from "next/font/google";
 
 const inter = Inter({
@@ -57,6 +58,7 @@ export default function RootLayout({
           </nav>
         </header>
         {children}
+        <Analytics />
       </body>
     </html>
   );
