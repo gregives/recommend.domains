@@ -22,16 +22,16 @@ const features = [
     icon: DocumentCheckIcon,
   },
   {
-    name: "No credit card required",
-    description:
-      "Recommend Domains is free and always will be! We use affiliate links in order to keep the site running: if you decide to buy a domain that we’ve suggested, we’d really appreciate it if you bought it via our site.",
-    icon: CreditCardIcon,
-  },
-  {
     name: "Multiple registrars",
     description:
       "We don’t expect you to use the same registrar as we do. That’s why we give you the option to buy your perfect domain name from Namecheap, Domain.com, Google Domains, GoDaddy and bluehost.",
     icon: ShoppingCartIcon,
+  },
+  {
+    name: "No credit card required",
+    description:
+      "Recommend Domains is 100% free and always will be. If you'd like to support the site, starring the GitHub repository would be very much appreciated!",
+    icon: CreditCardIcon,
   },
 ];
 
@@ -392,12 +392,21 @@ export default function Home() {
                         </Dialog.Title>
                       </div>
                       <div className="relative mt-6 flex-1 px-4 sm:px-6 space-y-4">
+                        <p className="text-sm text-gray-400 mb-8">
+                          Some of these are affiliate links, which means we may
+                          earn a commission at no additional cost to you. It
+                          helps us to keep the site running!
+                        </p>
                         {affiliates.map((affiliate) => (
                           <a
                             key={affiliate.id}
                             target="_blank"
                             href={`${affiliate.href}${selectedDomain?.domain}`}
                             className={`block bg-gradient-to-br ${affiliate.bg} rounded-xl p-8 h-28`}
+                            onClick={(event) => {
+                              // @ts-ignore
+                              event.target.href = `/api/redirect?href=${affiliate.href}${selectedDomain?.domain}`;
+                            }}
                           >
                             <span className="sr-only">{affiliate.name}</span>
                             <Image
