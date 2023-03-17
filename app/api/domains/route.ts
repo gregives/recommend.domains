@@ -25,8 +25,6 @@ const tlds: { name: string; type: "COUNTRY_CODE" | "GENERIC" }[] = await fetch(
   }
 ).then((response) => response.json());
 
-console.debug(tlds);
-
 const domainRegex = new RegExp(
   `[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\\.(?:${tlds
     .map(({ name }) => name.replaceAll(".", "\\."))
@@ -69,8 +67,6 @@ setInterval(() => {
 export async function POST(request: Request) {
   const { description, limit = 20 } = await request.json();
 
-  console.debug(description);
-
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: [
@@ -80,8 +76,6 @@ export async function POST(request: Request) {
       },
     ],
   });
-
-  console.debug(completion);
 
   const domainNames: string[] = [];
 
@@ -93,8 +87,6 @@ export async function POST(request: Request) {
     );
   }
 
-  console.debug(domainNames);
-
   domainNamesToCheck.push(...domainNames);
 
   // Wait for the next domain name availability check to start
@@ -103,14 +95,9 @@ export async function POST(request: Request) {
   // Wait until the check has finished
   await currentDomainNameAvailabilityCheck;
 
-  console.debug(domainNamesToCheck);
-  console.debug(domainNamesThatHaveBeenChecked);
-
   const availableDomains = domainNames
     .map((domainName) => domainNamesThatHaveBeenChecked[domainName])
     .filter((domain) => domain !== undefined && domain.available);
-
-  console.debug(availableDomains);
 
   return NextResponse.json(availableDomains);
 }
