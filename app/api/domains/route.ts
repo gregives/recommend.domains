@@ -27,7 +27,7 @@ const tlds: { name: string; type: "COUNTRY_CODE" | "GENERIC" }[] = await fetch(
 
 const domainRegex = new RegExp(
   `[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\\.(?:${tlds
-    .map(({ name }) => name.replaceAll(".", "\\."))
+    .map(({ name }) => name.replace(/\./g, "\\."))
     .join("|")})`,
   "gi"
 );
@@ -65,14 +65,14 @@ setInterval(() => {
 }, 1000);
 
 export async function POST(request: Request) {
-  const { description, limit = 20 } = await request.json();
+  const { description } = await request.json();
 
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: [
       {
         role: "user",
-        content: `List ${limit} suitable domain names for my website, no longer than 20 characters each. Description of my website: "${description}"`,
+        content: `List some suitable domain names for my website in CSV format. Description of my website: "${description}"`,
       },
     ],
   });
