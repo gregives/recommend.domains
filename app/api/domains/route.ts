@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     messages: [
       {
         role: "user",
-        content: `List some suitable domain names for my website in CSV format. Description of my website: "${description}"`,
+        content: `List some suitable domain names for my project in CSV format. Description of my project: "${description}"`,
       },
     ],
   });
