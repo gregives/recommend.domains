@@ -36,36 +36,33 @@ const features = [
 ];
 
 const placeholders = [
-  "Virtual interior design service for people who want to redesign their homes",
-  "App that tracks carbon footprint and suggests ways to reduce it",
-  "Eco-friendly fashion brand that uses sustainable materials and practices",
-  "Language learning platform that connects users with native speakers for conversation practice",
-  "Mental health app that provides personalized meditation and therapy sessions",
-  "Subscription box service for healthy snacks and wellness products",
-  "Social network for artists to showcase and sell their work",
-  "Online platform for booking and managing vacation rental properties",
-  "Personal finance app that helps users create and stick to a budget",
-  "Platform for connecting freelancers with short-term project opportunities",
-  "Educational website that teaches practical skills like cooking, gardening, and woodworking",
-  "Mobile app that gamifies fitness and encourages users to exercise",
-  "Online marketplace for vintage and secondhand clothing",
-  "Web platform that provides resources and support for people with chronic illnesses",
-  "Online course that teaches entrepreneurship and startup skills",
-  "Sustainable home cleaning service using eco-friendly products and methods",
-  "Personalized nutrition plan service that provides meal plans and recipes",
-  "Virtual book club that connects readers with similar interests and hosts author Q&As",
-  "E-commerce platform for independent artists and creators to sell their products",
-  "Online language translation service that uses AI and human translators for accuracy",
+  "Virtual interior design service",
+  "App that tracks carbon footprint",
+  "Eco-friendly fashion brand",
+  "Language learning platform that connects users with native speakers",
+  "Mental health app that provides personalized therapy sessions",
+  "Subscription box service for healthy snacks",
+  "Social network for artists",
+  "Personal finance app that helps users stick to a budget",
+  "Platform for connecting freelancers with projects",
+  "Educational website that teaches practical skills",
+  "Mobile app that gamifies fitness",
+  "Online marketplace for vintage clothing",
+  "Online course that teaches entrepreneurship",
+  "Sustainable home cleaning service",
+  "Personalized nutrition plan service",
+  "Virtual book club",
+  "E-commerce platform for independent artists",
+  "AI-powered online language translation service",
   "Mobile app that helps users find and book last-minute travel deals",
   "Sustainable and ethical fashion rental service",
-  "Digital marketing agency that specializes in social media marketing for small businesses",
   "Web-based project management tool for remote teams",
   "Home workout equipment rental service",
-  "Online platform that provides mental health resources and therapy for underserved communities",
-  "AI-powered job search platform that suggests personalized job openings based on user profiles",
+  "Online platform that provides mental health resources",
+  "AI-powered job search platform",
   "Subscription service for DIY and craft projects",
-  "Community-driven crowdfunding platform for social impact projects",
-  "Virtual reality platform for remote team building activities",
+  "Community-driven crowdfunding platform",
+  "Virtual reality platform for remote team building",
 ];
 
 function GitHubIcon(properties: JSX.IntrinsicElements["svg"]) {
@@ -257,7 +254,7 @@ export default function Home() {
                 onClick={loadInitialDomains}
               >
                 {loadingInitial && (
-                  <ArrowPathIcon className="animate-spin mr-8 w-[1.2em] h-[1.2em]" />
+                  <ArrowPathIcon className="animate-spin mr-4 w-[1.2em] h-[1.2em]" />
                 )}
                 Find my perfect domain name
               </button>
@@ -326,7 +323,7 @@ export default function Home() {
               onClick={loadMoreDomains}
             >
               {loadingMore && (
-                <ArrowPathIcon className="animate-spin mr-8 w-[1.2em] h-[1.2em]" />
+                <ArrowPathIcon className="animate-spin mr-4 w-[1.2em] h-[1.2em]" />
               )}
               Generate more
             </button>
