@@ -104,4 +104,6 @@ export default async function domains(request: NextRequest) {
   return NextResponse.json(availableDomains);
 }
 
-export const runtime = "edge";
+export const config = {
+  runtime: "edge",
+};
