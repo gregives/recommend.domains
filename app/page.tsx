@@ -1,15 +1,10 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import type { Domain } from "./api/domains/route";
 import Image from "next/image";
-import namecheapLogo from "@/images/namecheap.svg";
-import domaincomLogo from "@/images/domaincom.svg";
-import googleLogo from "@/images/google.svg";
-import godaddyLogo from "@/images/godaddy.svg";
-import bluehostLogo from "@/images/bluehost.svg";
 import {
   ArrowPathIcon,
   CreditCardIcon,
@@ -17,6 +12,7 @@ import {
   ShoppingCartIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { affiliates } from "@/constants/affiliates";
 
 const features = [
   {
@@ -396,66 +392,21 @@ export default function Home() {
                         </Dialog.Title>
                       </div>
                       <div className="relative mt-6 flex-1 px-4 sm:px-6 space-y-4">
-                        <a
-                          target="_blank"
-                          href={`https://www.namecheap.com/domains/registration/results/?domain=${selectedDomain?.domain}`}
-                          className="block bg-gradient-to-br from-orange-100 to-orange-200 hover:from-orange-200 hover:to-orange-300 rounded-xl p-8 h-28"
-                        >
-                          <span className="sr-only">Namecheap</span>
-                          <Image
-                            className="w-full h-full object-contain"
-                            alt=""
-                            src={namecheapLogo}
-                          />
-                        </a>
-                        <a
-                          target="_blank"
-                          href={`https://www.domain.com/registration/?search=${selectedDomain?.domain}`}
-                          className="block bg-gradient-to-br from-red-100 to-red-200 hover:from-red-200 hover:to-red-300 rounded-xl p-8 h-28"
-                        >
-                          <span className="sr-only">Domain.com</span>
-                          <Image
-                            className="w-full h-full object-contain"
-                            alt=""
-                            src={domaincomLogo}
-                          />
-                        </a>
-                        <a
-                          target="_blank"
-                          href={`https://domains.google.com/registrar/search?searchTerm=${selectedDomain?.domain}`}
-                          className="block bg-gradient-to-br from-amber-100 to-amber-200 hover:from-amber-200 hover:to-amber-300 rounded-xl p-8 h-28"
-                        >
-                          <span className="sr-only">Google Domains</span>
-                          <Image
-                            className="w-full h-full object-contain"
-                            alt=""
-                            src={googleLogo}
-                          />
-                        </a>
-                        <a
-                          target="_blank"
-                          href={`https://uk.godaddy.com/domainsearch/find?domainToCheck=${selectedDomain?.domain}`}
-                          className="block bg-gradient-to-br from-teal-100 to-teal-200 hover:from-teal-200 hover:to-teal-300 rounded-xl p-8 h-28"
-                        >
-                          <span className="sr-only">GoDaddy</span>
-                          <Image
-                            className="w-full h-full object-contain"
-                            alt=""
-                            src={godaddyLogo}
-                          />
-                        </a>
-                        <a
-                          target="_blank"
-                          href={`https://www.bluehost.com/registration/?search=${selectedDomain?.domain}`}
-                          className="block bg-gradient-to-br from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300 rounded-xl p-8 h-28"
-                        >
-                          <span className="sr-only">bluehost</span>
-                          <Image
-                            className="w-full h-full object-contain"
-                            alt=""
-                            src={bluehostLogo}
-                          />
-                        </a>
+                        {affiliates.map((affiliate) => (
+                          <a
+                            key={affiliate.id}
+                            target="_blank"
+                            href={`${affiliate.href}${selectedDomain?.domain}`}
+                            className={`block bg-gradient-to-br ${affiliate.bg} rounded-xl p-8 h-28`}
+                          >
+                            <span className="sr-only">{affiliate.name}</span>
+                            <Image
+                              className="w-full h-full object-contain pointer-events-none"
+                              alt=""
+                              src={affiliate.logo}
+                            />
+                          </a>
+                        ))}
                       </div>
                     </div>
                   </Dialog.Panel>
