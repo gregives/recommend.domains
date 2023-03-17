@@ -65,7 +65,10 @@ setInterval(() => {
 }, 1000);
 
 export async function POST(request: Request) {
-  const { description } = await request.json();
+  let { description } = await request.json();
+
+  // Make sure description is 100 characters or less
+  description = description.slice(0, 100);
 
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
