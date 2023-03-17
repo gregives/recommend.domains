@@ -61,7 +61,7 @@ export default function RootLayout({
         <Analytics />
         <script
           defer
-          src="https://www.anrdoezrs.net/am/100812186/include/joined/am.js"
+          src="https://www.anrdoezrs.net/am/100812186/include/allCj/am.js"
         ></script>
       </body>
     </html>
