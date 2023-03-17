@@ -106,7 +106,7 @@ export default function Home() {
     let characterIndex = 0;
     let placeholderIndex = 0;
     let typingForwards = true;
-    let waitAtEnd = 400;
+    let waitAtEnd = 200;
 
     const interval = setInterval(() => {
       if (mounted) {
@@ -132,7 +132,7 @@ export default function Home() {
 
         setPlaceholder(placeholders[placeholderIndex].slice(0, characterIndex));
       }
-    }, 5);
+    }, 10);
 
     return () => {
       clearInterval(interval);
