@@ -35,7 +35,18 @@ const features = [
   },
 ];
 
-const placeholders = [
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffledArray = [...array];
+
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+
+  return shuffledArray;
+}
+
+const placeholders = shuffleArray([
   "Virtual interior design service",
   "App that tracks carbon footprint",
   "Eco-friendly fashion brand",
@@ -63,7 +74,7 @@ const placeholders = [
   "Subscription service for DIY and craft projects",
   "Community-driven crowdfunding platform",
   "Virtual reality platform for remote team building",
-];
+]);
 
 function GitHubIcon(properties: JSX.IntrinsicElements["svg"]) {
   return (
