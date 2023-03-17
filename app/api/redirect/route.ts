@@ -2,7 +2,7 @@ import { affiliates } from "@/constants/affiliates";
 import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
-export default function affiliate(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const href = searchParams.get("href");
 
@@ -21,6 +21,4 @@ export default function affiliate(request: NextRequest) {
   redirect(href);
 }
 
-export const config = {
-  runtime: "edge",
-};
+export const runtime = "experimental-edge";
