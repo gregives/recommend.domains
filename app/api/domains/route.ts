@@ -104,6 +104,4 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(availableDomains);
 }
 
-export const config = {
-  runtime: "edge",
-};
+export const runtime = "experimental-edge";
