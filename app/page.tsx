@@ -155,7 +155,6 @@ export default function Home() {
     setLoadingInitial(true);
 
     const newDomains: Domain[] = await fetch("/api/domains", {
-      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -181,7 +180,6 @@ export default function Home() {
     setLoadingMore(true);
 
     const newDomains: Domain[] = await fetch("/api/domains", {
-      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },

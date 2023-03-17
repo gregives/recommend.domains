@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export type Domain = {
   available: boolean;
@@ -57,7 +57,7 @@ setInterval(() => {
   currentDomainNameAvailabilityCheck = checkDomainNamesAvailability();
 }, 1000);
 
-export async function POST(request: Request) {
+export default async function domains(request: NextRequest) {
   let { description } = await request.json();
 
   // Make sure description is 100 characters or less
@@ -104,6 +104,4 @@ export async function POST(request: Request) {
   return NextResponse.json(availableDomains);
 }
 
-export const config = {
-  runtime: "edge",
-};
+export const runtime = "edge";

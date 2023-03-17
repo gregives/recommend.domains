@@ -1,7 +1,8 @@
 import { affiliates } from "@/constants/affiliates";
 import { redirect } from "next/navigation";
+import { NextRequest } from "next/server";
 
-export async function GET(request: Request) {
+export default function affiliate(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const href = searchParams.get("href");
 
