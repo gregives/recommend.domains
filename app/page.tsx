@@ -397,7 +397,7 @@ export default function Home() {
                             key={affiliate.id}
                             target="_blank"
                             href={`${affiliate.href}${selectedDomain?.domain}`}
-                            className={`block bg-gradient-to-br from-${affiliate.color}-100 to-${affiliate.color}-200 hover:from-${affiliate.color}-200 hover:to-${affiliate.color}-300 rounded-xl p-8 h-28`}
+                            className={`block bg-gradient-to-br ${affiliate.bg} rounded-xl p-8 h-28`}
                           >
                             <span className="sr-only">{affiliate.name}</span>
                             <Image

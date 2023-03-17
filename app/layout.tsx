@@ -59,10 +59,6 @@ export default function RootLayout({
         </header>
         {children}
         <Analytics />
-        <script
-          defer
-          src="https://www.anrdoezrs.net/am/100812186/include/allCj/am.js"
-        ></script>
       </body>
     </html>
   );
