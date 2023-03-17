@@ -159,10 +159,9 @@ export default function Home() {
               your next project
             </h1>
             <p className="max-w-3xl mt-10 mb-16 leading-7 md:leading-8 text-gray-600">
-              Describe your website and we’ll generate a list of domain names
-              for you to choose from, only the available ones of course! Find
-              your perfect domain name today{" "}
-              <strong className="font-semibold">for free</strong>.
+              Describe your website in a few words and we’ll generate a list of
+              domain names for you to choose from! Find your perfect domain name
+              today <strong className="font-semibold">for free</strong>.
             </p>
             <form className="w-full">
               <label htmlFor="description" className="sr-only">
@@ -171,10 +170,10 @@ export default function Home() {
               <input
                 id="description"
                 className="block w-full px-4 py-3 md:px-6 md:py-4 rounded-xl border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                maxLength={200}
+                maxLength={100}
                 placeholder="Website to sell handmade jewelry"
                 {...register("description", {
-                  maxLength: 200,
+                  maxLength: 100,
                 })}
               />
               <button
