@@ -245,7 +245,7 @@ export default function Home() {
               domain names for you to choose from! Find your perfect domain name
               today <strong className="font-semibold">for free</strong>.
             </p>
-            <form className="w-full">
+            <form className="w-full" onSubmit={loadInitialDomains}>
               <label htmlFor="description" className="sr-only">
                 Description
               </label>
