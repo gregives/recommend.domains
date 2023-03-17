@@ -57,7 +57,7 @@ setInterval(() => {
   currentDomainNameAvailabilityCheck = checkDomainNamesAvailability();
 }, 1000);
 
-export default async function domains(request: NextRequest) {
+export async function POST(request: NextRequest) {
   let { description } = await request.json();
 
   // Make sure description is 100 characters or less
