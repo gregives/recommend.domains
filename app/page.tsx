@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import type { Domain } from "./api/domains/route";
 import Image from "next/image";
@@ -30,9 +30,42 @@ const features = [
   {
     name: "No credit card required",
     description:
-      "Recommend Domains is 100% free and always will be. If you'd like to support the site, starring the GitHub repository would be very much appreciated!",
+      "Recommend Domains is 100% free and always will be. If you’d like to support the site, starring the GitHub repository would be very much appreciated!",
     icon: CreditCardIcon,
   },
+];
+
+const placeholders = [
+  "Virtual interior design service for people who want to redesign their homes",
+  "App that tracks carbon footprint and suggests ways to reduce it",
+  "Eco-friendly fashion brand that uses sustainable materials and practices",
+  "Language learning platform that connects users with native speakers for conversation practice",
+  "Mental health app that provides personalized meditation and therapy sessions",
+  "Subscription box service for healthy snacks and wellness products",
+  "Social network for artists to showcase and sell their work",
+  "Online platform for booking and managing vacation rental properties",
+  "Personal finance app that helps users create and stick to a budget",
+  "Platform for connecting freelancers with short-term project opportunities",
+  "Educational website that teaches practical skills like cooking, gardening, and woodworking",
+  "Mobile app that gamifies fitness and encourages users to exercise",
+  "Online marketplace for vintage and secondhand clothing",
+  "Web platform that provides resources and support for people with chronic illnesses",
+  "Online course that teaches entrepreneurship and startup skills",
+  "Sustainable home cleaning service using eco-friendly products and methods",
+  "Personalized nutrition plan service that provides meal plans and recipes",
+  "Virtual book club that connects readers with similar interests and hosts author Q&As",
+  "E-commerce platform for independent artists and creators to sell their products",
+  "Online language translation service that uses AI and human translators for accuracy",
+  "Mobile app that helps users find and book last-minute travel deals",
+  "Sustainable and ethical fashion rental service",
+  "Digital marketing agency that specializes in social media marketing for small businesses",
+  "Web-based project management tool for remote teams",
+  "Home workout equipment rental service",
+  "Online platform that provides mental health resources and therapy for underserved communities",
+  "AI-powered job search platform that suggests personalized job openings based on user profiles",
+  "Subscription service for DIY and craft projects",
+  "Community-driven crowdfunding platform for social impact projects",
+  "Virtual reality platform for remote team building activities",
 ];
 
 function GitHubIcon(properties: JSX.IntrinsicElements["svg"]) {
@@ -68,6 +101,47 @@ export default function Home() {
       description: "",
     },
   });
+
+  const [placeholder, setPlaceholder] = useState("");
+
+  useEffect(() => {
+    let mounted = true;
+    let characterIndex = 0;
+    let placeholderIndex = 0;
+    let typingForwards = true;
+    let waitAtEnd = 400;
+
+    const interval = setInterval(() => {
+      if (mounted) {
+        if (!typingForwards && characterIndex === 0) {
+          typingForwards = true;
+          placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+        } else if (
+          typingForwards &&
+          characterIndex === placeholders[placeholderIndex].length
+        ) {
+          if (waitAtEnd === 0) {
+            waitAtEnd = 200;
+            typingForwards = false;
+          } else {
+            waitAtEnd--;
+            return;
+          }
+        }
+
+        characterIndex = typingForwards
+          ? characterIndex + 1
+          : characterIndex - 1;
+
+        setPlaceholder(placeholders[placeholderIndex].slice(0, characterIndex));
+      }
+    }, 5);
+
+    return () => {
+      clearInterval(interval);
+      mounted = false;
+    };
+  }, []);
 
   const loadInitialDomains = handleSubmit(async ({ description }) => {
     setLoadingInitial(true);
@@ -171,7 +245,7 @@ export default function Home() {
                 id="description"
                 className="block w-full px-4 py-3 md:px-6 md:py-4 rounded-xl border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                 maxLength={100}
-                placeholder="Website to sell handmade jewelry"
+                placeholder={placeholder}
                 {...register("description", {
                   maxLength: 100,
                 })}
@@ -283,7 +357,7 @@ export default function Home() {
               >
                 GoDaddy
               </a>{" "}
-              to make sure that it is available.
+              to make sure that it’s available.
             </p>
           </div>
           <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
