@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { Configuration, OpenAIApi } from "openai";
 
 export type Domain = {
   available: boolean;
@@ -9,12 +8,6 @@ export type Domain = {
   period?: number;
   price?: number;
 };
-
-const openai = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
-);
 
 const tlds: { name: string; type: "COUNTRY_CODE" | "GENERIC" }[] = await fetch(
   `${process.env.GODADDY_URL}/v1/domains/tlds`,
@@ -70,19 +63,25 @@ export async function POST(request: Request) {
   // Make sure description is 100 characters or less
   description = description.slice(0, 100);
 
-  const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "user",
-        content: `List some suitable domain names for my project in CSV format. Description of my project: "${description}"`,
-      },
-    ],
-  });
+  const completion = await fetch("https://api.openai.com/v1/chat/completions", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `List some suitable domain names for my project in CSV format. Description of my project: "${description}"`,
+        },
+      ],
+    }),
+  }).then((response) => response.json());
 
   const domainNames: string[] = [];
 
-  for (const choice of completion.data.choices) {
+  for (const choice of completion.choices) {
     domainNames.push(
       ...[...(choice.message?.content.matchAll(domainRegex) ?? [])]
         .map(([domainName]) => domainName.toLowerCase())
@@ -104,3 +103,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json(availableDomains);
 }
+
+export const config = {
+  runtime: "edge",
+};
