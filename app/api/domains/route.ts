@@ -64,6 +64,7 @@ export async function POST(request: NextRequest) {
   description = description.slice(0, 100);
 
   const completion = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
