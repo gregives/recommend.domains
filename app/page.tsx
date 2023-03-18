@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import type { Domain } from "./api/domains/route";
 import Image from "next/image";
@@ -96,10 +96,13 @@ function TwitterIcon(properties: JSX.IntrinsicElements["svg"]) {
   );
 }
 
+const textDecoder = new TextDecoder();
+
 export default function Home() {
+  const domains = useRef<Domain[]>([]);
+
   const [loadingInitial, setLoadingInitial] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [domains, setDomains] = useState<Domain[]>([]);
 
   const [slideOverOpen, setSlideOverOpen] = useState(false);
   const [selectedDomain, setSelectedDomain] = useState<Domain>();
@@ -151,10 +154,8 @@ export default function Home() {
     };
   }, []);
 
-  const loadInitialDomains = handleSubmit(async ({ description }) => {
-    setLoadingInitial(true);
-
-    const newDomains: Domain[] = await fetch("/api/domains", {
+  const loadDomains = handleSubmit(async ({ description }) => {
+    const response = await fetch("/api/domains", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -162,43 +163,47 @@ export default function Home() {
       body: JSON.stringify({
         description,
       }),
-    }).then((response) => response.json());
+    });
 
-    setLoadingInitial(false);
-    setDomains(newDomains);
+    if (response.body === null) {
+      return;
+    }
 
-    // Wait for results section to appear
-    setTimeout(() => {
-      const results = document.getElementById("results");
+    const reader = response.body.getReader();
 
-      if (results !== null) {
-        results.scrollIntoView();
+    while (true) {
+      const { value, done } = await reader.read();
+
+      if (done) {
+        break;
       }
-    }, 100);
+
+      const newDomains = JSON.parse(
+        "[" + textDecoder.decode(value).replace(/,$/, "") + "]"
+      );
+      domains.current = [
+        ...domains.current,
+        ...newDomains
+          .flat()
+          .filter(
+            ({ domain: newDomain }: Domain) =>
+              !domains.current.find(({ domain }) => domain === newDomain)
+          ),
+      ];
+    }
   });
 
-  const loadMoreDomains = handleSubmit(async ({ description }) => {
+  const loadInitialDomains = async () => {
+    setLoadingInitial(true);
+    await loadDomains();
+    setLoadingInitial(false);
+  };
+
+  const loadMoreDomains = async () => {
     setLoadingMore(true);
-
-    const newDomains: Domain[] = await fetch("/api/domains", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        description,
-      }),
-    }).then((response) => response.json());
-
+    await loadDomains();
     setLoadingMore(false);
-    setDomains([
-      ...domains,
-      ...newDomains.filter(
-        ({ domain: newDomain }) =>
-          domains.find(({ domain }) => domain === newDomain) === undefined
-      ),
-    ]);
-  });
+  };
 
   return (
     <main>
@@ -241,7 +246,7 @@ export default function Home() {
               your next project
             </h1>
             <p className="max-w-3xl mt-10 mb-16 leading-7 md:leading-8 text-gray-600">
-              Describe your website in a few words and we’ll generate a list of
+              Describe your project in a few words and we’ll generate a list of
               domain names for you to choose from! Find your perfect domain name
               today <strong className="font-semibold">for free</strong>.
             </p>
@@ -298,11 +303,11 @@ export default function Home() {
           </svg>
         </div>
       </section>
-      {domains.length > 0 && (
+      {domains.current.length > 0 && (
         <section id="results" className="relative px-6 lg:px-8 bg-indigo-600">
           <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
             <ul role="list" className="space-y-6">
-              {domains.map((domain) => (
+              {domains.current.map((domain) => (
                 <li
                   key={domain.domain}
                   className="rounded-xl bg-white px-4 py-3 md:px-6 md:py-4 shadow flex items-stretch sm:items-center"
