@@ -104,10 +104,6 @@ export async function POST(request: NextRequest) {
             .replace(/^data: /, "");
 
           if (data.includes("[DONE]")) {
-            // Wait until all domain availability checks have finished
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-
-            controller.close();
             return;
           }
 
@@ -139,16 +135,25 @@ export async function POST(request: NextRequest) {
             .map((domainName) => domainNamesThatHaveBeenChecked[domainName])
             .filter((domain) => domain !== undefined && domain.available);
 
-          if (availableDomains.length > 0) {
-            console.log(availableDomains);
-          }
-
           controller.enqueue(
             textEncoder.encode(JSON.stringify(availableDomains) + ",")
           );
         } catch {
           // This usually happens at the end of the stream
         }
+      });
+
+      stream.on("end", async () => {
+        // Wait for the last domain name availability check to start
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Wait until the check has finished
+        await currentDomainNameAvailabilityCheck;
+
+        // Wait a bit more for last chunks to be sent
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        controller.close();
       });
 
       stream.on("error", (error) => {
