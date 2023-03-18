@@ -55,10 +55,8 @@ export default function Home() {
         break;
       }
 
-      console.log(textDecoder.decode(value));
-
       const newDomains = JSON.parse(
-        "[" + textDecoder.decode(value).trim().slice(0, -1) + "]"
+        "[" + textDecoder.decode(value).replace(/,$/, "") + "]"
       );
 
       if (domains.current.length === 0 && newDomains.length > 0) {
