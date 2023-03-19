@@ -29,7 +29,7 @@ export default function Home() {
     },
   });
 
-  useDynamicPlaceholder("description", watch("description").length > 0);
+  useDynamicPlaceholder("description", watch("description").length === 0);
 
   const loadDomains = async (description: string) => {
     const response = await fetch("/api/domains", {
