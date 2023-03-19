@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Readable } from "node:stream";
 import { Configuration, OpenAIApi } from "openai";
 
 export type Domain = {
