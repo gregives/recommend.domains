@@ -47,6 +47,7 @@ export default function Home() {
     }
 
     const reader = response.body.getReader();
+    let completeResponse = "";
 
     while (true) {
       const { value, done } = await reader.read();
@@ -55,33 +56,34 @@ export default function Home() {
         break;
       }
 
-      console.log(textDecoder.decode(value));
+      completeResponse += textDecoder.decode(value);
 
-      const newDomains = JSON.parse(
-        "[" + textDecoder.decode(value).replace(/,$/, "") + "]"
-      );
+      // Domains are separated by |
+      for (const text of completeResponse.split("|")) {
+        try {
+          const newDomain = JSON.parse(text);
 
-      if (domains.current.length === 0 && newDomains.length > 0) {
-        setTimeout(() => {
-          const results = document.getElementById("results");
-          if (results !== null) {
-            window.scrollTo(0, results.offsetTop - 32);
+          if (
+            !domains.current.find(({ domain }) => domain === newDomain.domain)
+          ) {
+            if (domains.current.length === 0) {
+              setTimeout(() => {
+                const results = document.getElementById("results");
+                if (results !== null) {
+                  window.scrollTo(0, results.offsetTop - 32);
+                }
+              }, 100);
+            }
+
+            domains.current = [...domains.current, newDomain];
           }
-        }, 100);
+
+          // This forces the component to render
+          setDomains(domains.current);
+        } catch {
+          // Only streamed part of a chunk
+        }
       }
-
-      domains.current = [
-        ...domains.current,
-        ...newDomains
-          .flat()
-          .filter(
-            ({ domain: newDomain }: Domain) =>
-              !domains.current.find(({ domain }) => domain === newDomain)
-          ),
-      ];
-
-      // This forces the component to render
-      setDomains(domains.current);
     }
   };
 

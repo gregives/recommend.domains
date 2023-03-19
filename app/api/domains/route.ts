@@ -135,9 +135,16 @@ export async function POST(request: NextRequest) {
             .map((domainName) => domainNamesThatHaveBeenChecked[domainName])
             .filter((domain) => domain !== undefined && domain.available);
 
-          controller.enqueue(
-            textEncoder.encode(JSON.stringify(availableDomains) + ",")
-          );
+          // Return available domains separated by |
+          if (availableDomains.length > 0) {
+            controller.enqueue(
+              textEncoder.encode(
+                availableDomains
+                  .map((availableDomain) => JSON.stringify(availableDomain))
+                  .join("|") + "|"
+              )
+            );
+          }
         } catch {
           // This usually happens at the end of the stream
         }
