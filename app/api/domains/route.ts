@@ -49,25 +49,34 @@ const openai = new OpenAIApi(
   })
 );
 
-const tlds: { name: string; type: "COUNTRY_CODE" | "GENERIC" }[] = await fetch(
-  `${process.env.GODADDY_URL}/v1/domains/tlds`,
-  {
-    headers: {
-      Authorization: `sso-key ${process.env.GODADDY_API_KEY}:${process.env.GODADDY_API_SECRET}`,
-    },
+let domainRegex: RegExp;
+
+async function initialize() {
+  if (domainRegex) {
+    return;
   }
-).then((response) => response.json());
 
-const domainRegex = new RegExp(
-  `[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\\.(?:${tlds
-    .map(({ name }) => name.replace(/\./g, "\\."))
-    .join("|")})`,
-  "gi"
-);
+  const tlds: { name: string; type: "COUNTRY_CODE" | "GENERIC" }[] =
+    await fetch(`${process.env.GODADDY_URL}/v1/domains/tlds`, {
+      headers: {
+        Authorization: `sso-key ${process.env.GODADDY_API_KEY}:${process.env.GODADDY_API_SECRET}`,
+      },
+    }).then((response) => response.json());
 
+  domainRegex = new RegExp(
+    `[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\\.(?:${tlds
+      .map(({ name }) => name.replace(/\./g, "\\."))
+      .join("|")})`,
+    "gi"
+  );
+}
+
+const textDecoder = new TextDecoder();
 const textEncoder = new TextEncoder();
 
 export async function POST(request: NextRequest) {
+  await initialize();
+
   let { description }: { description: string } = await request.json();
 
   // Make sure description is 100 characters or less
@@ -75,99 +84,113 @@ export async function POST(request: NextRequest) {
 
   const stream = new ReadableStream({
     async start(controller) {
-      const response = await openai.createChatCompletion(
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
         {
-          model: "gpt-3.5-turbo",
-          stream: true,
-          messages: [
-            {
-              role: "user",
-              content: `List some suitable domain names for my project in CSV format. Description of my project: "${description}"`,
-            },
-          ],
-        },
-        {
-          responseType: "stream",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            stream: true,
+            messages: [
+              {
+                role: "user",
+                content: `List some suitable domain names for my project in CSV format. Description of my project: "${description}"`,
+              },
+            ],
+          }),
         }
       );
 
-      const stream = response.data as unknown as Readable;
+      if (response.body === null) {
+        return;
+      }
+
+      const reader = response.body.getReader();
 
       let completeResponse = "";
       const domainNamesFound: string[] = [];
 
-      stream.on("data", async (chunk) => {
-        try {
-          const data = chunk
-            .toString()
-            .trim()
-            .replace(/^data: /, "");
+      readWhile: while (true) {
+        const { value, done } = await reader.read();
+
+        if (done) {
+          break readWhile;
+        }
+
+        const lines = textDecoder.decode(value).split(/\n+/);
+
+        for (let data of lines) {
+          data = data.trim().replace(/^data: /, "");
 
           if (data.includes("[DONE]")) {
-            return;
+            break readWhile;
           }
 
-          const [choice] = JSON.parse(data).choices;
+          try {
+            const [choice] = JSON.parse(data).choices;
 
-          // Add delta to complete response
-          completeResponse += choice.delta.content;
+            // Add delta to complete response
+            completeResponse += choice.delta.content;
 
-          // Find new domain names in the complete response
-          const newDomainNames = [
-            ...(completeResponse.matchAll(domainRegex) ?? []),
-          ]
-            .map(([domainName]) => domainName.toLowerCase())
-            .filter(
-              (domainName) =>
-                domainName.length < 25 && !domainNamesFound.includes(domainName)
-            );
+            // Find new domain names in the complete response
+            const newDomainNames = [
+              ...(completeResponse.matchAll(domainRegex) ?? []),
+            ]
+              .map(([domainName]) => domainName.toLowerCase())
+              .filter(
+                (domainName) =>
+                  domainName.length < 25 &&
+                  !domainNamesFound.includes(domainName)
+              );
 
-          domainNamesFound.push(...newDomainNames);
-          domainNamesToCheck.push(...newDomainNames);
+            domainNamesFound.push(...newDomainNames);
+            domainNamesToCheck.push(...newDomainNames);
 
-          // Wait for the next domain name availability check to start
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+            // Wait for the next domain name availability check to start
+            setTimeout(async () => {
+              // Wait until the check has finished
+              await currentDomainNameAvailabilityCheck;
 
-          // Wait until the check has finished
-          await currentDomainNameAvailabilityCheck;
+              const availableDomains = newDomainNames
+                .map((domainName) => domainNamesThatHaveBeenChecked[domainName])
+                .filter((domain) => domain !== undefined && domain.available);
 
-          const availableDomains = newDomainNames
-            .map((domainName) => domainNamesThatHaveBeenChecked[domainName])
-            .filter((domain) => domain !== undefined && domain.available);
-
-          // Return available domains separated by |
-          if (availableDomains.length > 0) {
-            controller.enqueue(
-              textEncoder.encode(
-                availableDomains
-                  .map((availableDomain) => JSON.stringify(availableDomain))
-                  .join("|") + "|"
-              )
-            );
+              // Return available domains separated by |
+              if (availableDomains.length > 0) {
+                controller.enqueue(
+                  textEncoder.encode(
+                    availableDomains
+                      .map((availableDomain) => JSON.stringify(availableDomain))
+                      .join("|") + "|"
+                  )
+                );
+              }
+            }, 1000);
+          } catch {
+            // Ignore lines that we fail to parse
           }
-        } catch {
-          // This usually happens at the end of the stream
         }
-      });
+      }
 
-      stream.on("end", async () => {
-        // Wait for the last domain name availability check to start
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Wait for the next domain name availability check to start
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        // Wait until the check has finished
-        await currentDomainNameAvailabilityCheck;
+      // Wait until the check has finished
+      await currentDomainNameAvailabilityCheck;
 
-        // Wait a bit more for last chunks to be sent
-        await new Promise((resolve) => setTimeout(resolve, 100));
+      // Wait for all chunks to be sent
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
-        controller.close();
-      });
-
-      stream.on("error", (error) => {
-        controller.error(error);
-      });
+      // Close the stream
+      controller.close();
     },
   });
 
   return new NextResponse(stream);
 }
+
+export const runtime = "experimental-edge";

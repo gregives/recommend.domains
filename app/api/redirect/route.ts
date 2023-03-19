@@ -19,3 +19,5 @@ export async function GET(request: Request) {
 
   redirect(href);
 }
+
+export const runtime = "experimental-edge";
