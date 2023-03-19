@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export type Domain = {
   available: boolean;
-  currency: string;
   definitive: boolean;
   domain: string;
   period?: number;
   price?: number;
+  currency?: string;
 };
 
 async function getAvailableDomains(domainNames: string[]) {
@@ -14,7 +14,7 @@ async function getAvailableDomains(domainNames: string[]) {
     return [];
   }
 
-  const availability: { domains: Domain[] } = await fetch(
+  const response = await fetch(
     `${process.env.GODADDY_URL}/v1/domains/available`,
     {
       method: "POST",
@@ -24,7 +24,18 @@ async function getAvailableDomains(domainNames: string[]) {
       },
       body: JSON.stringify(domainNames),
     }
-  ).then((response) => response.json());
+  );
+
+  // If GoDaddy are throttling us then we assume all domains are available
+  if (!response.ok) {
+    return domainNames.map<Domain>((domainName) => ({
+      available: true,
+      definitive: false,
+      domain: domainName,
+    }));
+  }
+
+  const availability: { domains: Domain[] } = await response.json();
 
   return availability.domains.filter((domain) => domain.available);
 }
