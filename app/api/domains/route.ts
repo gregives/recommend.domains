@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { Readable } from "node:stream";
 import { Configuration, OpenAIApi } from "openai";
 
 export type Domain = {
@@ -9,28 +10,6 @@ export type Domain = {
   period?: number;
   price?: number;
 };
-
-const openai = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
-);
-
-const tlds: { name: string; type: "COUNTRY_CODE" | "GENERIC" }[] = await fetch(
-  `${process.env.GODADDY_URL}/v1/domains/tlds`,
-  {
-    headers: {
-      Authorization: `sso-key ${process.env.GODADDY_API_KEY}:${process.env.GODADDY_API_SECRET}`,
-    },
-  }
-).then((response) => response.json());
-
-const domainRegex = new RegExp(
-  `[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\\.(?:${tlds
-    .map(({ name }) => name.replace(/\./g, "\\."))
-    .join("|")})`,
-  "gi"
-);
 
 const domainNamesToCheck: string[] = [];
 const domainNamesThatHaveBeenChecked: Record<string, Domain> = {};
@@ -64,43 +43,131 @@ setInterval(() => {
   currentDomainNameAvailabilityCheck = checkDomainNamesAvailability();
 }, 1000);
 
-export async function POST(request: Request) {
-  let { description } = await request.json();
+const openai = new OpenAIApi(
+  new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+);
+
+const tlds: { name: string; type: "COUNTRY_CODE" | "GENERIC" }[] = await fetch(
+  `${process.env.GODADDY_URL}/v1/domains/tlds`,
+  {
+    headers: {
+      Authorization: `sso-key ${process.env.GODADDY_API_KEY}:${process.env.GODADDY_API_SECRET}`,
+    },
+  }
+).then((response) => response.json());
+
+const domainRegex = new RegExp(
+  `[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\\.(?:${tlds
+    .map(({ name }) => name.replace(/\./g, "\\."))
+    .join("|")})`,
+  "gi"
+);
+
+const textEncoder = new TextEncoder();
+
+export async function POST(request: NextRequest) {
+  let { description }: { description: string } = await request.json();
 
   // Make sure description is 100 characters or less
   description = description.slice(0, 100);
 
-  const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "user",
-        content: `List some suitable domain names for my project in CSV format. Description of my project: "${description}"`,
-      },
-    ],
+  const stream = new ReadableStream({
+    async start(controller) {
+      const response = await openai.createChatCompletion(
+        {
+          model: "gpt-3.5-turbo",
+          stream: true,
+          messages: [
+            {
+              role: "user",
+              content: `List some suitable domain names for my project in CSV format. Description of my project: "${description}"`,
+            },
+          ],
+        },
+        {
+          responseType: "stream",
+        }
+      );
+
+      const stream = response.data as unknown as Readable;
+
+      let completeResponse = "";
+      const domainNamesFound: string[] = [];
+
+      stream.on("data", async (chunk) => {
+        try {
+          const data = chunk
+            .toString()
+            .trim()
+            .replace(/^data: /, "");
+
+          if (data.includes("[DONE]")) {
+            return;
+          }
+
+          const [choice] = JSON.parse(data).choices;
+
+          // Add delta to complete response
+          completeResponse += choice.delta.content;
+
+          // Find new domain names in the complete response
+          const newDomainNames = [
+            ...(completeResponse.matchAll(domainRegex) ?? []),
+          ]
+            .map(([domainName]) => domainName.toLowerCase())
+            .filter(
+              (domainName) =>
+                domainName.length < 25 && !domainNamesFound.includes(domainName)
+            );
+
+          domainNamesFound.push(...newDomainNames);
+          domainNamesToCheck.push(...newDomainNames);
+
+          // Wait for the next domain name availability check to start
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
+          // Wait until the check has finished
+          await currentDomainNameAvailabilityCheck;
+
+          const availableDomains = newDomainNames
+            .map((domainName) => domainNamesThatHaveBeenChecked[domainName])
+            .filter((domain) => domain !== undefined && domain.available);
+
+          // Return available domains separated by |
+          if (availableDomains.length > 0) {
+            controller.enqueue(
+              textEncoder.encode(
+                availableDomains
+                  .map((availableDomain) => JSON.stringify(availableDomain))
+                  .join("|") + "|"
+              )
+            );
+          }
+        } catch {
+          // This usually happens at the end of the stream
+        }
+      });
+
+      stream.on("end", async () => {
+        // Wait for the last domain name availability check to start
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Wait until the check has finished
+        await currentDomainNameAvailabilityCheck;
+
+        // Wait a bit more for last chunks to be sent
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        controller.close();
+      });
+
+      stream.on("error", (error) => {
+        controller.error(error);
+      });
+    },
   });
 
-  const domainNames: string[] = [];
-
-  for (const choice of completion.data.choices) {
-    domainNames.push(
-      ...[...(choice.message?.content.matchAll(domainRegex) ?? [])]
-        .map(([domainName]) => domainName.toLowerCase())
-        .filter((domainName) => domainName.length < 25)
-    );
-  }
-
-  domainNamesToCheck.push(...domainNames);
-
-  // Wait for the next domain name availability check to start
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  // Wait until the check has finished
-  await currentDomainNameAvailabilityCheck;
-
-  const availableDomains = domainNames
-    .map((domainName) => domainNamesThatHaveBeenChecked[domainName])
-    .filter((domain) => domain !== undefined && domain.available);
-
-  return NextResponse.json(availableDomains);
+  return new NextResponse(stream);
 }
