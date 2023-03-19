@@ -178,5 +178,3 @@ export async function POST(request: NextRequest) {
 
   return new NextResponse(stream);
 }
-
-export const runtime = "experimental-edge";
