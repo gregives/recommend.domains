@@ -18,6 +18,7 @@ async function getAvailableDomains(domainNames: string[]) {
     `${process.env.GODADDY_URL}/v1/domains/available`,
     {
       method: "POST",
+      cache: "no-store",
       headers: {
         Authorization: `sso-key ${process.env.GODADDY_API_KEY}:${process.env.GODADDY_API_SECRET}`,
         "Content-Type": "application/json",
@@ -79,6 +80,7 @@ export async function POST(request: NextRequest) {
         "https://api.openai.com/v1/chat/completions",
         {
           method: "POST",
+          cache: "no-store",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
