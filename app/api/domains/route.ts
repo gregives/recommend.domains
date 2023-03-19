@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Configuration, OpenAIApi } from "openai";
 
 export type Domain = {
   available: boolean;
@@ -10,15 +9,12 @@ export type Domain = {
   price?: number;
 };
 
-const domainNamesToCheck: string[] = [];
-const domainNamesThatHaveBeenChecked: Record<string, Domain> = {};
-
-async function checkDomainNamesAvailability() {
-  if (domainNamesToCheck.length === 0) {
-    return;
+async function getAvailableDomains(domainNames: string[]) {
+  if (domainNames.length === 0) {
+    return [];
   }
 
-  const availability = await fetch(
+  const availability: { domains: Domain[] } = await fetch(
     `${process.env.GODADDY_URL}/v1/domains/available`,
     {
       method: "POST",
@@ -26,27 +22,12 @@ async function checkDomainNamesAvailability() {
         Authorization: `sso-key ${process.env.GODADDY_API_KEY}:${process.env.GODADDY_API_SECRET}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(
-        domainNamesToCheck.splice(0, domainNamesToCheck.length)
-      ),
+      body: JSON.stringify(domainNames),
     }
   ).then((response) => response.json());
 
-  for (const domain of availability.domains) {
-    domainNamesThatHaveBeenChecked[domain.domain] = domain;
-  }
+  return availability.domains.filter((domain) => domain.available);
 }
-
-let currentDomainNameAvailabilityCheck: Promise<void>;
-setInterval(() => {
-  currentDomainNameAvailabilityCheck = checkDomainNamesAvailability();
-}, 1000);
-
-const openai = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
-);
 
 let domainRegex: RegExp;
 
@@ -112,6 +93,7 @@ export async function POST(request: NextRequest) {
 
       let completeResponse = "";
       const domainNamesFound: string[] = [];
+      const pendingPromises: Promise<void>[] = [];
 
       readWhile: while (true) {
         const { value, done } = await reader.read();
@@ -147,41 +129,35 @@ export async function POST(request: NextRequest) {
               );
 
             domainNamesFound.push(...newDomainNames);
-            domainNamesToCheck.push(...newDomainNames);
 
-            // Wait for the next domain name availability check to start
-            setTimeout(async () => {
-              // Wait until the check has finished
-              await currentDomainNameAvailabilityCheck;
-
-              const availableDomains = newDomainNames
-                .map((domainName) => domainNamesThatHaveBeenChecked[domainName])
-                .filter((domain) => domain !== undefined && domain.available);
-
-              // Return available domains separated by |
-              if (availableDomains.length > 0) {
-                controller.enqueue(
-                  textEncoder.encode(
-                    availableDomains
-                      .map((availableDomain) => JSON.stringify(availableDomain))
-                      .join("|") + "|"
-                  )
-                );
+            const pendingPromise = getAvailableDomains(newDomainNames).then(
+              (availableDomains) => {
+                // Return available domains separated by |
+                if (availableDomains.length > 0) {
+                  controller.enqueue(
+                    textEncoder.encode(
+                      availableDomains
+                        .map((availableDomain) =>
+                          JSON.stringify(availableDomain)
+                        )
+                        .join("|") + "|"
+                    )
+                  );
+                }
               }
-            }, 1000);
+            );
+
+            pendingPromises.push(pendingPromise);
           } catch {
             // Ignore lines that we fail to parse
           }
         }
       }
 
-      // Wait for the next domain name availability check to start
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Wait for all availability checks to finish
+      await Promise.all(pendingPromises);
 
-      // Wait until the check has finished
-      await currentDomainNameAvailabilityCheck;
-
-      // Wait for all chunks to be sent
+      // Wait a bit more for all the chunks to send
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Close the stream
