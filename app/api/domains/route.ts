@@ -141,6 +141,8 @@ export async function POST(request: NextRequest) {
 
             domainNamesFound.push(...newDomainNames);
 
+            console.log(newDomainNames);
+
             const pendingPromise = getAvailableDomains(newDomainNames).then(
               (availableDomains) => {
                 // Return available domains separated by |
