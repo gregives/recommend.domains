@@ -23,13 +23,13 @@ export default function Home() {
   const [slideOverOpen, setSlideOverOpen] = useState(false);
   const [selectedDomain, setSelectedDomain] = useState<Domain>();
 
-  useDynamicPlaceholder("description");
-
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, watch } = useForm({
     defaultValues: {
       description: "",
     },
   });
+
+  useDynamicPlaceholder("description", watch("description").length > 0);
 
   const loadDomains = async (description: string) => {
     const response = await fetch("/api/domains", {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 
 function shuffleArray<T>(array: T[]): T[] {
   const shuffledArray = [...array];
@@ -41,7 +41,7 @@ const placeholders = shuffleArray([
   "Virtual reality platform for remote team building",
 ]);
 
-export function useDynamicPlaceholder(id: string) {
+export function useDynamicPlaceholder(id: string, enabled: boolean) {
   useEffect(() => {
     const element = document.getElementById(id);
 
@@ -52,7 +52,7 @@ export function useDynamicPlaceholder(id: string) {
     let waitAtEnd = 200;
 
     const interval = setInterval(() => {
-      if (mounted) {
+      if (mounted && enabled) {
         if (!typingForwards && characterIndex === 0) {
           typingForwards = true;
           placeholderIndex = (placeholderIndex + 1) % placeholders.length;
@@ -86,5 +86,5 @@ export function useDynamicPlaceholder(id: string) {
       clearInterval(interval);
       mounted = false;
     };
-  }, [id]);
+  }, [enabled, id]);
 }
