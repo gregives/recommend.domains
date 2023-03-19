@@ -161,7 +161,7 @@ export default function Home() {
           id="form"
           className={`${
             domains.current.length === 0 ? "relative" : "sticky"
-          } z-50 top-0 pt-5 px-6 lg:px-8 -mt-36 sm:-mt-52 lg:-mt-60 mb-6`}
+          } z-20 top-0 pt-5 px-6 lg:px-8 -mt-36 sm:-mt-52 lg:-mt-60 mb-6`}
         >
           <form className="mx-auto max-w-4xl" onSubmit={loadInitialDomains}>
             <label htmlFor="description" className="sr-only">
@@ -241,7 +241,7 @@ export default function Home() {
       <Transition.Root show={slideOverOpen} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10"
+          className="relative z-50"
           onClose={() => setSlideOverOpen(false)}
         >
           <Transition.Child
