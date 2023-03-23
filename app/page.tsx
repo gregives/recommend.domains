@@ -137,7 +137,7 @@ export default function Home() {
               </defs>
             </svg>
           </div>
-          <div className="mx-auto max-w-4xl -mt-16 py-32 sm:py-48 lg:py-56">
+          <div className="mx-auto max-w-4xl -mt-8 py-32 sm:py-48 lg:py-56">
             <div className="flex flex-col items-center text-center">
               <div className="hidden sm:mb-8 sm:flex sm:justify-center">
                 <div className="relative rounded-full py-1 px-3 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
