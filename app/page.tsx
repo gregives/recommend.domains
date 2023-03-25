@@ -112,7 +112,7 @@ export default function Home() {
     <main>
       <div>
         <section className="relative px-6 pt-14 lg:px-8">
-          <div className="absolute z-10 inset-x-0 -top-40 transform-gpu overflow-hidden blur-3xl sm:-top-80">
+          <div className="absolute -z-10 inset-x-0 -top-40 transform-gpu overflow-hidden blur-3xl sm:-top-80">
             <svg
               className="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
               viewBox="0 0 1155 678"
