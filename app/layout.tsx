@@ -21,6 +21,21 @@ export const metadata = {
   title: "Recommend Domains",
   description:
     "Use artificial intelligence to find the perfect domain name for your next project.",
+  openGraph: {
+    title: "Recommend Domains",
+    description:
+      "Use artificial intelligence to find the perfect domain name for your next project.",
+    url: "https://recommend.domains",
+    siteName: "Recommend Domains",
+    images: [
+      {
+        url: "https://recommend.domains/opengraph.jpg",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    type: "website",
+  },
 };
 
 export default function RootLayout({
