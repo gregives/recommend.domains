@@ -36,6 +36,13 @@ export const metadata = {
     ],
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Recommend Domains",
+    description:
+      "Use artificial intelligence to find the perfect domain name for your next project.",
+    images: ["https://recommend.domains/opengraph.jpg"],
+  },
 };
 
 export default function RootLayout({
