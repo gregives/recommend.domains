@@ -1,4 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  createParser,
+  ParsedEvent,
+  ReconnectInterval,
+} from "eventsource-parser";
 
 export type Domain = {
   available: boolean;
@@ -74,58 +79,47 @@ export async function POST(request: NextRequest) {
   // Make sure description is 100 characters or less
   description = description.slice(0, 100);
 
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      stream: true,
+      messages: [
+        {
+          role: "user",
+          content: `List some suitable domain names for my project in CSV format. Description of my project: "${description}"`,
+        },
+      ],
+    }),
+  });
+
+  const responseBody = response.body;
+
+  if (responseBody === null) {
+    throw new Error("Invalid response from OpenAI");
+  }
+
+  let completeResponse = "";
+  const domainNamesFound: string[] = [];
+  const pendingPromises: Promise<void>[] = [];
+
   const stream = new ReadableStream({
     async start(controller) {
-      const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          method: "POST",
-          cache: "no-store",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            stream: true,
-            messages: [
-              {
-                role: "user",
-                content: `List some suitable domain names for my project in CSV format. Description of my project: "${description}"`,
-              },
-            ],
-          }),
-        }
-      );
-
-      if (response.body === null) {
-        return;
-      }
-
-      const reader = response.body.getReader();
-
-      let completeResponse = "";
-      const domainNamesFound: string[] = [];
-      const pendingPromises: Promise<void>[] = [];
-
-      readWhile: while (true) {
-        const { value, done } = await reader.read();
-
-        if (done) {
-          break readWhile;
-        }
-
-        const lines = textDecoder.decode(value).split(/\n+/);
-
-        for (let data of lines) {
-          data = data.trim().replace(/^data: /, "");
-
-          if (data.includes("[DONE]")) {
-            break readWhile;
-          }
+      function onParse(event: ParsedEvent | ReconnectInterval) {
+        if (event.type === "event") {
+          const data = event.data;
 
           try {
             const [choice] = JSON.parse(data).choices;
+
+            if (choice.delta.content === undefined) {
+              return;
+            }
 
             // Add delta to complete response
             completeResponse += choice.delta.content;
@@ -167,6 +161,12 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      const parser = createParser(onParse);
+
+      for await (const chunk of responseBody as any) {
+        parser.feed(textDecoder.decode(chunk));
+      }
+
       // Wait for all availability checks to finish
       await Promise.all(pendingPromises);
 
@@ -180,3 +180,5 @@ export async function POST(request: NextRequest) {
 
   return new NextResponse(stream);
 }
+
+export const runtime = "experimental-edge";
