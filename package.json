@@ -16,7 +16,7 @@
     "autoprefixer": "^10.4.14",
     "eventsource-parser": "^1.0.0",
     "focus-visible": "^5.2.0",
-    "next": "^13.2.4",
+    "next": "^13.2.5-canary.21",
     "postcss": "^8.4.21",
     "postcss-focus-visible": "^8.0.2",
     "react": "^18.2.0",
