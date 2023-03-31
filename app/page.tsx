@@ -226,18 +226,19 @@ export default function Home() {
                 {domains.current.map((domain) => (
                   <li
                     key={domain.domain}
-                    className="rounded-xl bg-white px-4 py-3 md:px-6 md:py-4 shadow flex items-stretch sm:items-center"
+                    className="rounded-xl bg-white px-4 py-3 md:px-6 md:py-4 shadow flex items-center"
                   >
                     <div className="flex-1 flex flex-col sm:flex-row justify-between mr-4">
                       <span>{domain.domain}</span>
-                      <span className="text-gray-400 sm:text-gray-500">
-                        {domain.price !== undefined &&
-                          `$${domain.price / 1000000}`}
-                      </span>
+                      {domain.price !== undefined && (
+                        <span className="text-gray-400 sm:text-gray-500">
+                          ${domain.price / 1000000}
+                        </span>
+                      )}
                     </div>
                     <button
                       type="button"
-                      className="-my-1 -mr-2 md:-my-2 md:-mr-4 py-2 px-4 font-display rounded-md bg-gradient-to-br from-indigo-500 to-indigo-600 enabled:hover:from-indigo-400 enabled:hover:to-indigo-500 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      className="-my-1 -mr-2 md:-my-2 md:-mr-4 py-2 px-4 self-stretch font-display rounded-md bg-gradient-to-br from-indigo-500 to-indigo-600 enabled:hover:from-indigo-400 enabled:hover:to-indigo-500 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                       onClick={() => {
                         setSelectedDomain(domain);
                         setShowCheckout(true);
