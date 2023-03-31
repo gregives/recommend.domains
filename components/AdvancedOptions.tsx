@@ -65,7 +65,7 @@ export function AdvancedOptions({
                   onClick={() => {
                     onChange({
                       ...options,
-                      tlds: options.tlds.splice(tlds.indexOf(tld), 1),
+                      tlds: options.tlds.filter((t) => t !== tld),
                     });
                   }}
                   className="ml-1 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:bg-indigo-500 focus:text-white focus:outline-none"
