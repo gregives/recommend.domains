@@ -4,6 +4,7 @@ import {
   ParsedEvent,
   ReconnectInterval,
 } from "eventsource-parser";
+import { Options } from "@/components/AdvancedOptions";
 
 export type Domain = {
   available: boolean;
@@ -74,7 +75,8 @@ const textEncoder = new TextEncoder();
 export async function POST(request: NextRequest) {
   await initialize();
 
-  let { description }: { description: string } = await request.json();
+  let { description, options }: { description: string; options: Options } =
+    await request.json();
 
   // Make sure description is 100 characters or less
   description = description.slice(0, 100);
@@ -92,7 +94,13 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: "user",
-          content: `List some suitable domain names for my project in CSV format. Description of my project: "${description}"`,
+          content: `List some suitable domain names for my project in CSV format. ${
+            options.tlds.length > 0
+              ? `Only suggest domain names that end in ${options.tlds.join(
+                  " or "
+                )}. `
+              : ""
+          }Description of my project: "${description}"`,
         },
       ],
     }),

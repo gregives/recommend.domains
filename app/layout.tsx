@@ -66,14 +66,14 @@ export default function RootLayout({
           >
             <a
               href="#"
-              className="flex items-center -my-0.5 -mx-2 py-0.5 px-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+              className="flex items-center -my-0.5 -mx-2 py-0.5 px-2 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600"
             >
               <GlobeAltIcon className="h-5 w-5 mr-2 -ml-2" aria-hidden="true" />
               recommend.domains
             </a>
             <a
               href="https://github.com/gregives/recommend.domains"
-              className="text-indigo-600 bg-gradient-to-br from-indigo-50 to-indigo-100 -my-0.5 -mx-2 py-0.5 px-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+              className="text-indigo-600 bg-gradient-to-br from-indigo-50 to-indigo-100 -my-0.5 -mx-2 py-0.5 px-2 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600"
             >
               Star on GitHub
             </a>

@@ -36,7 +36,7 @@ export function Features() {
           <p className="mt-6 text-lg leading-8 text-gray-300">
             We use{" "}
             <a
-              className="text-indigo-400"
+              className="text-indigo-400 rounded focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-200"
               href="https://openai.com/blog/chatgpt"
               target="_blank"
             >
@@ -45,7 +45,7 @@ export function Features() {
             to generate the perfect domain name for your website. We then check
             the domain name with{" "}
             <a
-              className="text-indigo-400"
+              className="text-indigo-400 rounded focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-200"
               href="https://www.godaddy.com/en-uk"
               target="_blank"
             >
