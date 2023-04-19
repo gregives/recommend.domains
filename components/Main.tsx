@@ -16,6 +16,10 @@ import { AdvancedOptions, Options } from "@/components/AdvancedOptions";
 
 const shopify = affiliates[3];
 
+if (shopify.id !== "SHOPIFY") {
+  throw new Error("Make sure that components/Main.tsx references Shopify");
+}
+
 const textDecoder = new TextDecoder();
 
 export function Main({ version }: { version: "normal" | "shopify" }) {
@@ -128,7 +132,13 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
   });
 
   return (
-    <section className="backdrop-hue-rotate-[200deg] backdrop-brightness-105">
+    <section
+      className={
+        version === "shopify"
+          ? "backdrop-hue-rotate-[200deg] backdrop-brightness-105"
+          : undefined
+      }
+    >
       <div>
         <div className="relative px-6 pt-14 lg:px-8">
           <div className="mx-auto max-w-4xl -mt-8 py-32 sm:py-48 lg:py-56">

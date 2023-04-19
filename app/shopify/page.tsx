@@ -35,7 +35,7 @@ export default function Shopify() {
   return (
     <main>
       <Main version="shopify" />
-      <Features />
+      <Features version="shopify" />
       <Blog />
       <Footer />
     </main>

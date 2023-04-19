@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <main>
       <Main version="normal" />
-      <Features />
+      <Features version="normal" />
       <Blog />
       <Footer />
     </main>
