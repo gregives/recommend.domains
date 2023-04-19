@@ -6,6 +6,24 @@ const nextConfig = {
     appDir: true,
     mdxRs: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "github.com",
+        port: "",
+        pathname: "/*.png",
+      },
+    ],
+  },
+  webpack(config) {
+    config.experiments = {
+      ...config.experiments,
+      topLevelAwait: true,
+    };
+
+    return config;
+  },
 };
 
 export default addMDX({

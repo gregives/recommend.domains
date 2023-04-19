@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import type { Domain } from "./api/domains/route";
 import Image from "next/image";
@@ -13,14 +13,25 @@ import {
 import { affiliates } from "@/constants/affiliates";
 import { useDynamicPlaceholder } from "@/components/useDynamicPlaceholder";
 import { Features } from "@/components/Features";
+import { Blog } from "@/components/Blog";
 import { Footer } from "@/components/Footer";
 import { AdvancedOptions, Options } from "@/components/AdvancedOptions";
+import { useSearchParams } from "next/navigation";
 
 const textDecoder = new TextDecoder();
 
 export default function Home() {
   const domains = useRef<Domain[]>([]);
   const [, setDomains] = useState<Domain[]>([]);
+
+  const searchParams = useSearchParams();
+  const focus = searchParams.get("focus");
+
+  useEffect(() => {
+    if (typeof focus === "string") {
+      document.getElementById(focus)?.focus();
+    }
+  }, [focus]);
 
   const [loadingInitial, setLoadingInitial] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -240,9 +251,9 @@ export default function Home() {
         )}
       </div>
       <Features />
-      <div className="dark">
-        <Footer />
-      </div>
+      {/* @ts-expect-error */}
+      <Blog />
+      <Footer />
       <Transition.Root show={showOptions} as={Fragment}>
         <Dialog
           as="div"
