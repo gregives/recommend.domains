@@ -20,11 +20,13 @@ export function Main() {
   const domains = useRef<Domain[]>([]);
   const [, setDomains] = useState<Domain[]>([]);
 
+  const [error, setError] = useState<string>();
   const [loadingInitial, setLoadingInitial] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [selectedDomain, setSelectedDomain] = useState<Domain>();
   const [options, setOptions] = useState<Options>({
     tlds: [],
+    numberOfWords: 0,
   });
 
   const [showOptions, setShowOptions] = useState(false);
@@ -39,6 +41,8 @@ export function Main() {
   useDynamicPlaceholder("description", watch("description").length === 0);
 
   const loadDomains = async (description: string) => {
+    setError(undefined);
+
     const response = await fetch("/api/domains", {
       method: "POST",
       headers: {
@@ -50,7 +54,8 @@ export function Main() {
       }),
     });
 
-    if (response.body === null) {
+    if (!response.ok || response.body === null) {
+      setError("Something went wrong, try again?");
       return;
     }
 
@@ -92,6 +97,10 @@ export function Main() {
           // Only streamed part of a chunk
         }
       }
+    }
+
+    if (domains.current.length === 0) {
+      setError("No domains found, try again?");
     }
   };
 
@@ -165,13 +174,17 @@ export function Main() {
             />
             <button
               type="submit"
-              className="flex justify-center items-center shadow-lg shadow-indigo-600/30 w-full mt-4 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 enabled:hover:from-purple-400 enabled:hover:to-indigo-500 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-80"
+              className={`flex justify-center items-center shadow-lg w-full mt-4 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br  focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-80 ${
+                error
+                  ? "shadow-red-600/30 from-rose-600 to-red-600 enabled:hover:from-rose-500 enabled:hover:to-red-500 focus-visible:outline-red-600"
+                  : "shadow-indigo-600/30 from-purple-600 to-indigo-600 enabled:hover:from-purple-400 enabled:hover:to-indigo-500 focus-visible:outline-indigo-600"
+              }`}
               disabled={loadingInitial}
             >
               {loadingInitial && (
                 <ArrowPathIcon className="animate-spin mr-4 w-5 h-5" />
               )}
-              Find my perfect domain name
+              {error ? error : "Find my perfect domain name"}
             </button>
           </form>
         </div>

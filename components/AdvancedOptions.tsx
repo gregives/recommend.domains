@@ -1,11 +1,12 @@
 import { useId, useState } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import { Combobox } from "@headlessui/react";
+import { Combobox, RadioGroup } from "@headlessui/react";
 import { tlds } from "@/constants/tlds";
 import newGithubIssueUrl from "new-github-issue-url";
 
 export type Options = {
   tlds: string[];
+  numberOfWords: 0 | 1 | 2 | 3 | 4;
 };
 
 type AdvancedOptionsProperties = {
@@ -152,9 +153,44 @@ export function AdvancedOptions({
           )}
         </div>
       </Combobox>
+      <RadioGroup
+        value={options.numberOfWords}
+        onChange={(numberOfWords) => {
+          onChange({
+            ...options,
+            numberOfWords,
+          });
+        }}
+        className="mt-4"
+      >
+        <RadioGroup.Label className="block text-sm font-medium leading-6 text-gray-900">
+          Number of words (beta)
+        </RadioGroup.Label>
+        <div className="mt-2 grid grid-cols-5 gap-3">
+          {([0, 1, 2, 3, 4] as const).map((option) => (
+            <RadioGroup.Option
+              key={option}
+              value={option}
+              className={({ active, checked }) =>
+                classNames(
+                  active ? "ring-2 ring-indigo-600 ring-offset-2" : "",
+                  checked
+                    ? "bg-indigo-600 text-white hover:bg-indigo-500"
+                    : "ring-1 ring-inset ring-gray-300 bg-white text-gray-900 hover:bg-gray-50",
+                  "cursor-pointer focus:outline-none flex items-center justify-center rounded-xl px-3 py-2 md:px-4 md:py-3 leading-5 text-base flex-1"
+                )
+              }
+            >
+              <RadioGroup.Label as="span">
+                {option === 0 ? "Any" : option}
+              </RadioGroup.Label>
+            </RadioGroup.Option>
+          ))}
+        </div>
+      </RadioGroup>
       <button
         onClick={onClose}
-        className="flex justify-center items-center shadow-lg shadow-indigo-600/20 w-full mt-4 py-2 px-4 font-display text-white rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 enabled:hover:from-purple-400 enabled:hover:to-indigo-500 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-80"
+        className="flex justify-center items-center shadow-lg shadow-indigo-600/20 w-full mt-6 py-2 px-4 font-display text-white rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-500 enabled:hover:from-indigo-500 enabled:hover:to-indigo-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-80"
       >
         Save
       </button>
@@ -181,7 +217,7 @@ export function AdvancedOptions({
             title: "Suggestion for advanced options",
             body: suggestion,
           })}
-          className="flex justify-center items-center shadow-inner shadow-indigo-600/10 w-full mt-4 py-2 px-4 font-display text-indigo-600 rounded-xl bg-indigo-100 hover:bg-indigo-50 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-80"
+          className="flex justify-center items-center shadow-inner shadow-indigo-600/10 w-full mt-6 py-2 px-4 font-display text-indigo-800 rounded-xl bg-indigo-100 hover:bg-indigo-50 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-80"
         >
           Send suggestion
         </a>
