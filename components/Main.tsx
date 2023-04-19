@@ -14,9 +14,15 @@ import { affiliates } from "@/constants/affiliates";
 import { useDynamicPlaceholder } from "@/components/useDynamicPlaceholder";
 import { AdvancedOptions, Options } from "@/components/AdvancedOptions";
 
+const shopify = affiliates[3];
+
+if (shopify.id !== "SHOPIFY") {
+  throw new Error("Make sure that components/Main.tsx references Shopify");
+}
+
 const textDecoder = new TextDecoder();
 
-export function Main() {
+export function Main({ version }: { version: "normal" | "shopify" }) {
   const domains = useRef<Domain[]>([]);
   const [, setDomains] = useState<Domain[]>([]);
 
@@ -126,7 +132,13 @@ export function Main() {
   });
 
   return (
-    <section>
+    <section
+      className={
+        version === "shopify"
+          ? "backdrop-hue-rotate-[200deg] backdrop-brightness-105"
+          : undefined
+      }
+    >
       <div>
         <div className="relative px-6 pt-14 lg:px-8">
           <div className="mx-auto max-w-4xl -mt-8 py-32 sm:py-48 lg:py-56">
@@ -138,13 +150,22 @@ export function Main() {
               </div>
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl font-display">
                 Find the{" "}
-                <span className="text-indigo-600">perfect domain name</span> for
-                your next project
+                <span
+                  className={
+                    version === "shopify" ? "text-green-500" : "text-indigo-600"
+                  }
+                >
+                  perfect domain name
+                </span>{" "}
+                for your{" "}
+                {version === "shopify" ? "Shopify store" : "next project"}
               </h1>
               <p className="max-w-3xl mt-10 mb-16 leading-7 md:leading-8 text-gray-600">
-                Describe your project in a few words and we’ll generate a list
-                of domain names for you to choose from! Find your perfect domain
-                name today <strong className="font-semibold">for free</strong>.
+                Describe your{" "}
+                {version === "shopify" ? "Shopify store" : "project"} in a few
+                words and we’ll generate a list of domain names for you to
+                choose from! Find your perfect domain name today{" "}
+                <strong className="font-semibold">for free</strong>.
               </p>
             </div>
           </div>
@@ -177,6 +198,8 @@ export function Main() {
               className={`flex justify-center items-center shadow-lg w-full mt-4 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br  focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-80 ${
                 error
                   ? "shadow-red-600/30 from-rose-600 to-red-600 enabled:hover:from-rose-500 enabled:hover:to-red-500 focus-visible:outline-red-600"
+                  : version === "shopify"
+                  ? "shadow-lime-600/30 from-green-500 to-green-600 enabled:hover:from-green-400 enabled:hover:to-green-500 focus-visible:outline-green-600"
                   : "shadow-indigo-600/30 from-purple-600 to-indigo-600 enabled:hover:from-purple-400 enabled:hover:to-indigo-500 focus-visible:outline-indigo-600"
               }`}
               disabled={loadingInitial}
@@ -203,10 +226,19 @@ export function Main() {
         <div
           className={`${
             domains.current.length === 0 ? "relative" : "sticky"
-          } top-0 h-36 md:h-44 bg-white shadow-xl shadow-indigo-900/30`}
+          } top-0 h-36 md:h-44 bg-white shadow-xl ${
+            version === "shopify"
+              ? "shadow-grey-900/30"
+              : "shadow-indigo-900/30"
+          }`}
         ></div>
         {domains.current.length > 0 && (
-          <div id="results" className="px-6 lg:px-8 bg-indigo-600">
+          <div
+            id="results"
+            className={`px-6 lg:px-8 ${
+              version === "shopify" ? "bg-green-600" : "bg-indigo-600"
+            }`}
+          >
             <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
               <ul role="list" className="space-y-6">
                 {domains.current.map((domain) => (
@@ -222,16 +254,31 @@ export function Main() {
                         </span>
                       )}
                     </div>
-                    <button
-                      type="button"
-                      className="-my-1 -mr-2 md:-my-2 md:-mr-4 py-2 px-4 self-stretch font-display rounded-md bg-gradient-to-br from-indigo-500 to-indigo-600 enabled:hover:from-indigo-400 enabled:hover:to-indigo-500 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                      onClick={() => {
-                        setSelectedDomain(domain);
-                        setShowCheckout(true);
-                      }}
-                    >
-                      Buy
-                    </button>
+                    {version === "shopify" ? (
+                      <a
+                        type="button"
+                        className="-my-1 -mr-2 md:-my-2 md:-mr-4 py-2 px-4 self-stretch font-display rounded-md bg-gradient-to-br from-green-500 to-green-600 enabled:hover:from-green-400 enabled:hover:to-green-500 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                        target="_blank"
+                        href={`${shopify.href}${domain.domain}`}
+                        onClick={(event) => {
+                          // @ts-ignore
+                          event.target.href = `/api/redirect?href=${shopify.href}${domain.domain}`;
+                        }}
+                      >
+                        Buy
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        className="-my-1 -mr-2 md:-my-2 md:-mr-4 py-2 px-4 self-stretch font-display rounded-md bg-gradient-to-br from-indigo-500 to-indigo-600 enabled:hover:from-indigo-400 enabled:hover:to-indigo-500 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        onClick={() => {
+                          setSelectedDomain(domain);
+                          setShowCheckout(true);
+                        }}
+                      >
+                        Buy
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>

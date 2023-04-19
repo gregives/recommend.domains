@@ -6,8 +6,8 @@ import { Main } from "@/components/Main";
 export default function Home() {
   return (
     <main>
-      <Main />
-      <Features />
+      <Main version="normal" />
+      <Features version="normal" />
       <Blog />
       <Footer />
     </main>

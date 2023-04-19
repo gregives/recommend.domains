@@ -14,6 +14,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: "https://recommend.domains",
       lastModified: new Date(),
     },
+    {
+      url: "https://recommend.domains/shopify",
+      lastModified: new Date(),
+    },
     ...articles.map((slug) => ({
       url: `https://recommend.domains/blog/${slug}`,
       lastModified: new Date(),
