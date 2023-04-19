@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import type { Domain } from "@/app/api/domains/route";
 import Image from "next/image";
@@ -13,22 +13,12 @@ import {
 import { affiliates } from "@/constants/affiliates";
 import { useDynamicPlaceholder } from "@/components/useDynamicPlaceholder";
 import { AdvancedOptions, Options } from "@/components/AdvancedOptions";
-import { useSearchParams } from "next/navigation";
 
 const textDecoder = new TextDecoder();
 
 export function Main() {
   const domains = useRef<Domain[]>([]);
   const [, setDomains] = useState<Domain[]>([]);
-
-  const searchParams = useSearchParams();
-  const focus = searchParams.get("focus");
-
-  useEffect(() => {
-    if (typeof focus === "string") {
-      document.getElementById(focus)?.focus();
-    }
-  }, [focus]);
 
   const [loadingInitial, setLoadingInitial] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -127,9 +117,9 @@ export function Main() {
   });
 
   return (
-    <>
+    <section>
       <div>
-        <section className="relative px-6 pt-14 lg:px-8">
+        <div className="relative px-6 pt-14 lg:px-8">
           <div className="mx-auto max-w-4xl -mt-8 py-32 sm:py-48 lg:py-56">
             <div className="flex flex-col items-center text-center">
               <div className="hidden sm:mb-8 sm:flex sm:justify-center">
@@ -149,8 +139,8 @@ export function Main() {
               </p>
             </div>
           </div>
-        </section>
-        <section
+        </div>
+        <div
           id="form"
           className={`${
             domains.current.length === 0 ? "relative" : "sticky"
@@ -184,7 +174,7 @@ export function Main() {
               Find my perfect domain name
             </button>
           </form>
-        </section>
+        </div>
         <div className="relative px-6 lg:px-8 -mt-2 mb-2">
           <div className="mx-auto max-w-4xl">
             <button
@@ -203,7 +193,7 @@ export function Main() {
           } top-0 h-36 md:h-44 bg-white shadow-xl shadow-indigo-900/30`}
         ></div>
         {domains.current.length > 0 && (
-          <section id="results" className="px-6 lg:px-8 bg-indigo-600">
+          <div id="results" className="px-6 lg:px-8 bg-indigo-600">
             <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
               <ul role="list" className="space-y-6">
                 {domains.current.map((domain) => (
@@ -244,7 +234,7 @@ export function Main() {
                 Generate more
               </button>
             </div>
-          </section>
+          </div>
         )}
       </div>
       <Transition.Root show={showOptions} as={Fragment}>
@@ -399,6 +389,6 @@ export function Main() {
           </div>
         </Dialog>
       </Transition.Root>
-    </>
+    </section>
   );
 }
