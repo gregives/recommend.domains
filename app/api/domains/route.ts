@@ -84,7 +84,10 @@ export async function POST(request: NextRequest) {
   let prompt = "List some suitable domain names for my project in CSV format. ";
 
   if (options.tlds.length > 0) {
-    prompt += `Suggest domain names that end in ${options.tlds.join(" or ")}. `;
+    const lastTld = options.tlds.pop();
+    prompt += `Suggest domain names that end in ${options.tlds.join(", ")}${
+      options.tlds.length > 0 ? ` or ${lastTld}` : lastTld
+    }. `;
   }
 
   if (options.numberOfWords > 0) {
