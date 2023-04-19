@@ -81,6 +81,20 @@ export async function POST(request: NextRequest) {
   // Make sure description is 100 characters or less
   description = description.slice(0, 100);
 
+  let prompt = "List some suitable domain names for my project in CSV format. ";
+
+  if (options.tlds.length > 0) {
+    prompt += `Suggest domain names that end in ${options.tlds.join(" or ")}. `;
+  }
+
+  if (options.numberOfWords > 0) {
+    prompt += `Suggest domain names that are ${options.numberOfWords} word${
+      options.numberOfWords !== 1 ? "s" : ""
+    } long. `;
+  }
+
+  prompt += `Description of my project: "${description}"`;
+
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     cache: "no-store",
@@ -91,16 +105,11 @@ export async function POST(request: NextRequest) {
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
       stream: true,
+      max_tokens: 200,
       messages: [
         {
           role: "user",
-          content: `List some suitable domain names for my project in CSV format. ${
-            options.tlds.length > 0
-              ? `Only suggest domain names that end in ${options.tlds.join(
-                  " or "
-                )}. `
-              : ""
-          }Description of my project: "${description}"`,
+          content: prompt,
         },
       ],
     }),
