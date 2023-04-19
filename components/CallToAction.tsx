@@ -11,8 +11,8 @@ export function CallToAction() {
           today <strong className="font-semibold">for free</strong>.
         </p>
         <a
-          href="/"
-          className="inline-flex mt-12 bg-white py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display rounded-xl text-gray-900 shadow-sm hover:bg-indigo-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          href="/?focus=description"
+          className="inline-flex mt-12 bg-white py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display font-medium rounded-xl text-indigo-800 shadow-sm hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           Get started
         </a>

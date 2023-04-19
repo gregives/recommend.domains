@@ -21,4 +21,4 @@ export async function GET(request: NextRequest) {
   redirect(href);
 }
 
-export const runtime = "experimental-edge";
+export const runtime = "edge";
