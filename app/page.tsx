@@ -6,7 +6,7 @@ import { Main } from "@/components/Main";
 export default function Home() {
   return (
     <main>
-      <Main />
+      <Main version="normal" />
       <Features />
       <Blog />
       <Footer />
