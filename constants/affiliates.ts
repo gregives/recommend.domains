@@ -33,7 +33,7 @@ export const affiliates = [
   {
     id: "SHOPIFY",
     name: "Shopify",
-    href: "https://www.shopify.com/tools/domain-name-generator/search?tool=domains&query=",
+    href: "https://www.shopify.com/tools/domain-name-generator/search?query=",
     referral: process.env.SHOPIFY_REFERRAL_LINK,
     logo: shopifyLogo,
     bg: "from-lime-100 to-lime-200 hover:from-lime-200 hover:to-lime-300",
