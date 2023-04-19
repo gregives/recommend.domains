@@ -3,6 +3,7 @@ import domaincomLogo from "@/images/domaincom.svg";
 import googleLogo from "@/images/google.svg";
 import godaddyLogo from "@/images/godaddy.svg";
 import bluehostLogo from "@/images/bluehost.svg";
+import shopifyLogo from "@/images/shopify.svg";
 
 export const affiliates = [
   {
@@ -28,6 +29,14 @@ export const affiliates = [
     referral: process.env.DOMAINCOM_REFERRAL_LINK,
     logo: domaincomLogo,
     bg: "from-red-100 to-red-200 hover:from-red-200 hover:to-red-300",
+  },
+  {
+    id: "SHOPIFY",
+    name: "Shopify",
+    href: "https://www.shopify.com/tools/domain-name-generator/search?query=",
+    referral: process.env.SHOPIFY_REFERRAL_LINK,
+    logo: shopifyLogo,
+    bg: "from-lime-100 to-lime-200 hover:from-lime-200 hover:to-lime-300",
   },
   {
     id: "GOOGLE",
