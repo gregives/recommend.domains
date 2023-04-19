@@ -1,4 +1,4 @@
-import { articles as slugs } from "@/sitemap";
+import { articles as slugs } from "@/app/sitemap";
 import Image from "next/image";
 import Link from "next/link";
 
