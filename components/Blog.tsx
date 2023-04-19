@@ -2,7 +2,8 @@ import { articles as slugs } from "@/app/sitemap";
 import Image from "next/image";
 import Link from "next/link";
 
-export async function Blog() {
+// @ts-expect-error
+export async function Blog(): JSX.Element {
   const [featuredArticle, ...articles] = (
     await Promise.all(slugs.map((slug) => import(`@/blog/${slug}.mdx`)))
   )
