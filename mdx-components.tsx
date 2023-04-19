@@ -1,7 +1,8 @@
 import type { MDXComponents } from "mdx/types";
 import { CallToAction } from "@/components/CallToAction";
+import { Metadata } from "@/components/Metadata";
 
-function Anchor(properties: JSX.IntrinsicElements["a"]) {
+export function Anchor(properties: JSX.IntrinsicElements["a"]) {
   return (
     <a
       className="text-indigo-600 rounded focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600"
@@ -10,7 +11,7 @@ function Anchor(properties: JSX.IntrinsicElements["a"]) {
   );
 }
 
-function Heading1(properties: JSX.IntrinsicElements["h1"]) {
+export function Heading1(properties: JSX.IntrinsicElements["h1"]) {
   return (
     <h1
       className="text-4xl leading-snug md:text-5xl md:leading-snug lg:text-6xl lg:leading-snug font-display font-bold tracking-tight text-gray-900 mb-16 lg:-mx-16 md:text-center"
@@ -19,7 +20,7 @@ function Heading1(properties: JSX.IntrinsicElements["h1"]) {
   );
 }
 
-function Heading2(properties: JSX.IntrinsicElements["h2"]) {
+export function Heading2(properties: JSX.IntrinsicElements["h2"]) {
   return (
     <h2
       className="text-2xl font-bold tracking-tight text-gray-900 mt-8 mb-6"
@@ -28,13 +29,13 @@ function Heading2(properties: JSX.IntrinsicElements["h2"]) {
   );
 }
 
-function Heading3(properties: JSX.IntrinsicElements["h2"]) {
+export function Heading3(properties: JSX.IntrinsicElements["h2"]) {
   return (
     <h3 className="text-lg font-bold text-gray-900 mt-6 mb-4" {...properties} />
   );
 }
 
-function Paragraph(properties: JSX.IntrinsicElements["p"]) {
+export function Paragraph(properties: JSX.IntrinsicElements["p"]) {
   return <p className="mb-6" {...properties} />;
 }
 
@@ -46,6 +47,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h3: Heading3,
     p: Paragraph,
     CallToAction,
+    Metadata,
     ...components,
   };
 }
