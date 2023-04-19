@@ -228,7 +228,7 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
             domains.current.length === 0 ? "relative" : "sticky"
           } top-0 h-36 md:h-44 bg-white shadow-xl ${
             version === "shopify"
-              ? "shadow-green-900/30"
+              ? "shadow-grey-900/30"
               : "shadow-indigo-900/30"
           }`}
         ></div>
