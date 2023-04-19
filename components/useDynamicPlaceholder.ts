@@ -50,9 +50,10 @@ export function useDynamicPlaceholder(id: string, enabled: boolean) {
     let placeholderIndex = 0;
     let typingForwards = true;
     let waitAtEnd = 200;
+    let timeout: NodeJS.Timeout;
 
-    const interval = setInterval(() => {
-      if (mounted && enabled) {
+    (function changePlaceholder() {
+      logic: if (mounted && enabled) {
         if (!typingForwards && characterIndex === 0) {
           typingForwards = true;
           placeholderIndex = (placeholderIndex + 1) % placeholders.length;
@@ -65,7 +66,7 @@ export function useDynamicPlaceholder(id: string, enabled: boolean) {
             typingForwards = false;
           } else {
             waitAtEnd--;
-            return;
+            break logic;
           }
         }
 
@@ -80,10 +81,12 @@ export function useDynamicPlaceholder(id: string, enabled: boolean) {
           );
         }
       }
-    }, 10);
+
+      timeout = setTimeout(changePlaceholder, Math.floor(Math.random() * 20));
+    })();
 
     return () => {
-      clearInterval(interval);
+      clearTimeout(timeout);
       mounted = false;
     };
   }, [enabled, id]);
