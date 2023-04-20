@@ -26,20 +26,20 @@ export function Footer() {
       </h2>
       <div className="mx-auto max-w-7xl px-6 pb-8 lg:pb-16 lg:px-8">
         <div className="border-t border-black/10 dark:border-white/10 pt-8 flex items-center justify-between">
-          <p className="text-xs leading-5 text-gray-400">
+          <p className="text-xs leading-5 text-gray-500">
             &copy; {new Date().getFullYear()} Greg Ives. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <a
               href="https://github.com/gregives/recommend.domains"
-              className="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-200"
+              className="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-200"
             >
               <span className="sr-only">GitHub</span>
               <GitHubIcon className="h-6 w-6" aria-hidden="true" />
             </a>
             <a
               href="https://twitter.com/gregiv_es"
-              className="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-200"
+              className="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-200"
             >
               <span className="sr-only">Twitter</span>
               <TwitterIcon className="h-6 w-6" aria-hidden="true" />

@@ -11,15 +11,15 @@ export const articles = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     {
-      url: "https://recommend.domains",
+      url: "https://www.recommend.domains",
       lastModified: new Date(),
     },
     {
-      url: "https://recommend.domains/shopify",
+      url: "https://www.recommend.domains/shopify",
       lastModified: new Date(),
     },
     ...articles.map((slug) => ({
-      url: `https://recommend.domains/blog/${slug}`,
+      url: `https://www.recommend.domains/blog/${slug}`,
       lastModified: new Date(),
     })),
   ];

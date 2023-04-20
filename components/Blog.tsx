@@ -2,8 +2,12 @@ import { articles as slugs } from "@/app/sitemap";
 import Image from "next/image";
 import Link from "next/link";
 
-// @ts-expect-error
-export async function Blog(): JSX.Element {
+export async function Blog({
+  theme,
+}: {
+  theme: "normal" | "shopify";
+  // @ts-expect-error
+}): JSX.Element {
   const [featuredArticle, ...articles] = (
     await Promise.all(slugs.map((slug) => import(`@/blog/${slug}.mdx`)))
   )
@@ -14,7 +18,11 @@ export async function Blog(): JSX.Element {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
-    <section className="bg-gradient-to-br from-indigo-100 to-50% to-white py-24 sm:py-32">
+    <section
+      className={`bg-gradient-to-br to-50% to-white py-24 sm:py-32 ${
+        theme === "shopify" ? "from-primary-50" : "from-primary-100"
+      }`}
+    >
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-x-8 gap-y-12 px-6 sm:gap-y-16 lg:grid-cols-2 lg:px-8">
         <article className="mx-auto w-full max-w-2xl lg:mx-0 lg:max-w-lg">
           <time
@@ -35,7 +43,7 @@ export async function Blog(): JSX.Element {
             <div className="flex">
               <Link
                 href={`/blog/${featuredArticle.slug}`}
-                className="text-sm font-semibold leading-6 text-indigo-600 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-200"
+                className="text-sm font-semibold leading-6 text-primary-600 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-200"
               >
                 Continue reading <span aria-hidden="true">&rarr;</span>
               </Link>
@@ -43,7 +51,7 @@ export async function Blog(): JSX.Element {
             <div className="flex lg:border-t lg:border-gray-900/10 lg:pt-8">
               <a
                 href={`https://github.com/${featuredArticle.author}`}
-                className="flex gap-x-2.5 text-sm font-semibold leading-6 text-gray-900 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-200"
+                className="flex gap-x-2.5 text-sm font-semibold leading-6 text-gray-900 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-200"
               >
                 <Image
                   src={`https://github.com/${featuredArticle.author}.png?size=24`}
@@ -73,7 +81,7 @@ export async function Blog(): JSX.Element {
                   <h2 className="mt-2 text-lg font-display font-semibold text-gray-900 group-hover:text-gray-600">
                     <a
                       href={`/blog/${article.slug}`}
-                      className="rounded-md focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-200"
+                      className="rounded-md focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-200"
                     >
                       <span className="absolute inset-0" />
                       {article.title}
@@ -86,7 +94,7 @@ export async function Blog(): JSX.Element {
                 <div className="mt-4 flex">
                   <a
                     href={`https://github.com/${article.author}`}
-                    className="relative flex gap-x-2.5 text-sm font-semibold leading-6 text-gray-900 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-200"
+                    className="relative flex gap-x-2.5 text-sm font-semibold leading-6 text-gray-900 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-200"
                   >
                     <Image
                       src={`https://github.com/${article.author}.png?size=24`}
