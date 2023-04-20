@@ -16,13 +16,13 @@ export function Features({ theme }: { theme: "normal" | "shopify" }) {
       ? {
           name: "Buy direct from Shopify",
           description:
-            "When you’ve found the perfect domain name for your new Shopify store, we’ll take you straight to Shopify’s website to finalise your purchase. Keep everything in the same place.",
+            "When you’ve found the perfect domain name for your new Shopify store, you’ll have the option to buy it straight from Shopify, or from another registrar like Namecheap, Domain.com, Google Domains, GoDaddy or bluehost.",
           icon: ShoppingCartIcon,
         }
       : {
           name: "Multiple registrars",
           description:
-            "We don’t expect you to use the same registrar as we do. That’s why we give you the option to buy your perfect domain name from Namecheap, Domain.com, Google Domains, GoDaddy and bluehost.",
+            "We don’t expect you to use the same registrar as we do. That’s why we give you the option to buy your perfect domain name from Namecheap, Domain.com, Shopify, Google Domains, GoDaddy and bluehost.",
           icon: ShoppingCartIcon,
         },
     {

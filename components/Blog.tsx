@@ -15,7 +15,9 @@ export async function Blog({
       ...metadata,
       slug: slugs[index],
     }))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    .filter(({ slug }) => theme === "shopify" || !slug.includes("shopify"))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 4);
 
   return (
     <section

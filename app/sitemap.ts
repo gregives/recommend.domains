@@ -5,6 +5,7 @@ export const articles = [
   "find-the-perfect-domain-name",
   "how-to-brainstorm-domain-names",
   "how-to-choose-the-right-domain-name-extension",
+  "the-benefits-of-using-a-shopify-domain-name-generator",
   "the-dos-and-donts-of-choosing-a-domain-name",
 ];
 
