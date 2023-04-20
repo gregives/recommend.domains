@@ -1,4 +1,4 @@
-export function CallToAction() {
+export function CallToAction({ theme }: { theme: "normal" | "shopify" }) {
   return (
     <div className="mt-16 mb-24 -mx-6 sm:mx-0 lg:-mx-16">
       <div className="relative isolate overflow-hidden bg-primary-600 px-6 py-24 text-center shadow-2xl shadow-primary-600/50 sm:rounded-3xl sm:px-16">
@@ -6,12 +6,13 @@ export function CallToAction() {
           Find your perfect domain name today
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-primary-100">
-          Describe your project in a few words and we’ll generate a list of
-          domain names for you to choose from! Find your perfect domain name
-          today <strong className="font-semibold">for free</strong>.
+          Describe your {theme === "shopify" ? "business" : "project"} in a few
+          words and we’ll generate a list of domain names for you to choose
+          from! Find your perfect domain name today{" "}
+          <strong className="font-semibold">for free</strong>.
         </p>
         <a
-          href="/"
+          href={theme === "shopify" ? "/shopify" : "/"}
           className="inline-flex mt-12 bg-white py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display font-medium rounded-xl text-primary-800 shadow-lg shadow-white/30 hover:bg-primary-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           Get started
