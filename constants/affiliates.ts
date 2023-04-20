@@ -13,7 +13,8 @@ export const affiliates = [
     href: "https://www.namecheap.com/domains/registration/results/?domain=",
     referral: process.env.NAMECHEAP_REFERRAL_LINK,
     logo: namecheapLogo,
-    bg: "from-orange-100 to-orange-200 hover:from-orange-200 hover:to-orange-300",
+    className:
+      "from-orange-100 to-orange-200 hover:from-orange-200 hover:to-orange-300 focus-visible:outline-orange-600",
   },
   {
     id: "DOMAINCOM",
@@ -21,7 +22,8 @@ export const affiliates = [
     href: "https://www.domain.com/registration/?search=",
     referral: process.env.DOMAINCOM_REFERRAL_LINK,
     logo: domaincomLogo,
-    bg: "from-red-100 to-red-200 hover:from-red-200 hover:to-red-300",
+    className:
+      "from-red-100 to-red-200 hover:from-red-200 hover:to-red-300 focus-visible:outline-red-600",
   },
   {
     id: "HOSTINGER",
@@ -29,7 +31,8 @@ export const affiliates = [
     href: "https://www.hostinger.co.uk/domain-name-search?REFERRALCODE=1GREG48&domain=",
     referral: process.env.HOSTINGER_REFERRAL_LINK,
     logo: hostingerLogo,
-    bg: "from-purple-100 to-purple-200 hover:from-purple-200 hover:to-purple-300",
+    className:
+      "from-purple-100 to-purple-200 hover:from-purple-200 hover:to-purple-300 focus-visible:outline-purple-600",
   },
   {
     id: "SHOPIFY",
@@ -37,7 +40,8 @@ export const affiliates = [
     href: "https://www.shopify.com/tools/domain-name-generator/search?query=",
     referral: process.env.SHOPIFY_REFERRAL_LINK,
     logo: shopifyLogo,
-    bg: "from-lime-100 to-lime-200 hover:from-lime-200 hover:to-lime-300",
+    className:
+      "from-lime-100 to-lime-200 hover:from-lime-200 hover:to-lime-300 focus-visible:outline-lime-600",
   },
   {
     id: "BLUEHOST",
@@ -45,7 +49,8 @@ export const affiliates = [
     href: "https://www.bluehost.com/registration/?search=",
     referral: process.env.BLUEHOST_REFERRAL_LINK,
     logo: bluehostLogo,
-    bg: "from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300",
+    className:
+      "from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300 focus-visible:outline-blue-600",
   },
   {
     id: "GOOGLE",
@@ -53,7 +58,8 @@ export const affiliates = [
     href: "https://domains.google.com/registrar/search?searchTerm=",
     referral: process.env.GOOGLE_REFERRAL_LINK,
     logo: googleLogo,
-    bg: "from-amber-100 to-amber-200 hover:from-amber-200 hover:to-amber-300",
+    className:
+      "from-amber-100 to-amber-200 hover:from-amber-200 hover:to-amber-300 focus-visible:outline-amber-600",
   },
   {
     id: "GODADDY",
@@ -61,6 +67,7 @@ export const affiliates = [
     href: "https://uk.godaddy.com/domainsearch/find?domainToCheck=",
     referral: process.env.GODADDY_REFERRAL_LINK,
     logo: godaddyLogo,
-    bg: "from-teal-100 to-teal-200 hover:from-teal-200 hover:to-teal-300",
+    className:
+      "from-teal-100 to-teal-200 hover:from-teal-200 hover:to-teal-300 focus-visible:outline-teal-600",
   },
 ] as const;

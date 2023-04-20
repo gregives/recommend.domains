@@ -385,7 +385,7 @@ export function Main({ theme }: { theme: "normal" | "shopify" }) {
                               key={affiliate.id}
                               target="_blank"
                               href={`${affiliate.href}${selectedDomain?.domain}`}
-                              className={`block bg-gradient-to-br ${affiliate.bg} rounded-xl p-8 h-28 focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600`}
+                              className={`block bg-gradient-to-br rounded-xl p-8 h-28 focus:outline-none focus-visible:outline-2 ${affiliate.className}`}
                               onClick={(event) => {
                                 const encodedHref = encodeURIComponent(
                                   affiliate.href + selectedDomain?.domain
