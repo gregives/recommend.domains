@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import type { Domain } from "@/app/api/domains/route";
 import Image from "next/image";
@@ -14,15 +14,9 @@ import { affiliates } from "@/constants/affiliates";
 import { useDynamicPlaceholder } from "@/components/useDynamicPlaceholder";
 import { AdvancedOptions, Options } from "@/components/AdvancedOptions";
 
-const shopify = affiliates[3];
-
-if (shopify.id !== "SHOPIFY") {
-  throw new Error("Make sure that components/Main.tsx references Shopify");
-}
-
 const textDecoder = new TextDecoder();
 
-export function Main({ version }: { version: "normal" | "shopify" }) {
+export function Main({ theme }: { theme: "normal" | "shopify" }) {
   const domains = useRef<Domain[]>([]);
   const [, setDomains] = useState<Domain[]>([]);
 
@@ -132,13 +126,7 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
   });
 
   return (
-    <section
-      className={
-        version === "shopify"
-          ? "backdrop-hue-rotate-[200deg] backdrop-brightness-105"
-          : undefined
-      }
-    >
+    <section>
       <div>
         <div className="relative px-6 pt-14 lg:px-8">
           <div className="mx-auto max-w-4xl -mt-8 py-32 sm:py-48 lg:py-56">
@@ -150,19 +138,13 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
               </div>
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl font-display">
                 Find the{" "}
-                <span
-                  className={
-                    version === "shopify" ? "text-green-500" : "text-indigo-600"
-                  }
-                >
-                  perfect domain name
-                </span>{" "}
+                <span className="text-primary-600">perfect domain name</span>{" "}
                 for your{" "}
-                {version === "shopify" ? "Shopify store" : "next project"}
+                {theme === "shopify" ? "Shopify store" : "next project"}
               </h1>
               <p className="max-w-3xl mt-10 mb-16 leading-7 md:leading-8 text-gray-600">
                 Describe your{" "}
-                {version === "shopify" ? "Shopify store" : "project"} in a few
+                {theme === "shopify" ? "Shopify store" : "project"} in a few
                 words and we’ll generate a list of domain names for you to
                 choose from! Find your perfect domain name today{" "}
                 <strong className="font-semibold">for free</strong>.
@@ -185,7 +167,7 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
             </label>
             <input
               id="description"
-              className="block w-full px-4 py-3 md:px-6 md:py-4 rounded-xl border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+              className="block w-full px-4 py-3 md:px-6 md:py-4 rounded-xl border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-600"
               maxLength={100}
               required
               {...register("description", {
@@ -198,9 +180,7 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
               className={`flex justify-center items-center shadow-lg w-full mt-4 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br  focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-80 ${
                 error
                   ? "shadow-red-600/30 from-rose-600 to-red-600 enabled:hover:from-rose-500 enabled:hover:to-red-500 focus-visible:outline-red-600"
-                  : version === "shopify"
-                  ? "shadow-lime-600/30 from-green-500 to-green-600 enabled:hover:from-green-400 enabled:hover:to-green-500 focus-visible:outline-green-600"
-                  : "shadow-indigo-600/30 from-purple-600 to-indigo-600 enabled:hover:from-purple-400 enabled:hover:to-indigo-500 focus-visible:outline-indigo-600"
+                  : "shadow-primary-600/30 from-primary-500 to-primary-600 enabled:hover:from-primary-400 enabled:hover:to-primary-500 focus-visible:outline-primary-600"
               }`}
               disabled={loadingInitial}
             >
@@ -216,7 +196,7 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
             <button
               onClick={() => setShowOptions(true)}
               type="button"
-              className="flex justify-center items-center shadow-inner w-full mt-4 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-gray-800 rounded-xl bg-gray-100 enabled:hover:bg-gray-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-80"
+              className="flex justify-center items-center shadow-inner w-full mt-4 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-gray-800 rounded-xl bg-gray-100 enabled:hover:bg-gray-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-80"
             >
               <Cog8ToothIcon className="mr-4 w-6 h-6" />
               Advanced options
@@ -226,19 +206,10 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
         <div
           className={`${
             domains.current.length === 0 ? "relative" : "sticky"
-          } top-0 h-36 md:h-44 bg-white shadow-xl ${
-            version === "shopify"
-              ? "shadow-grey-900/30"
-              : "shadow-indigo-900/30"
-          }`}
+          } top-0 h-36 md:h-44 bg-white shadow-xl shadow-primary-900/30`}
         ></div>
         {domains.current.length > 0 && (
-          <div
-            id="results"
-            className={`px-6 lg:px-8 ${
-              version === "shopify" ? "bg-green-600" : "bg-indigo-600"
-            }`}
-          >
+          <div id="results" className="px-6 lg:px-8 bg-primary-600">
             <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
               <ul role="list" className="space-y-6">
                 {domains.current.map((domain) => (
@@ -254,37 +225,22 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
                         </span>
                       )}
                     </div>
-                    {version === "shopify" ? (
-                      <a
-                        type="button"
-                        className="-my-1 -mr-2 md:-my-2 md:-mr-4 py-2 px-4 self-stretch font-display rounded-md bg-gradient-to-br from-green-500 to-green-600 enabled:hover:from-green-400 enabled:hover:to-green-500 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-                        target="_blank"
-                        href={`${shopify.href}${domain.domain}`}
-                        onClick={(event) => {
-                          // @ts-ignore
-                          event.target.href = `/api/redirect?href=${shopify.href}${domain.domain}`;
-                        }}
-                      >
-                        Buy
-                      </a>
-                    ) : (
-                      <button
-                        type="button"
-                        className="-my-1 -mr-2 md:-my-2 md:-mr-4 py-2 px-4 self-stretch font-display rounded-md bg-gradient-to-br from-indigo-500 to-indigo-600 enabled:hover:from-indigo-400 enabled:hover:to-indigo-500 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        onClick={() => {
-                          setSelectedDomain(domain);
-                          setShowCheckout(true);
-                        }}
-                      >
-                        Buy
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      className="-my-1 -mr-2 md:-my-2 md:-mr-4 py-2 px-4 self-stretch font-display rounded-md bg-gradient-to-br text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 from-primary-500 to-primary-600 enabled:hover:from-primary-400 enabled:hover:to-primary-500 focus-visible:outline-primary-600"
+                      onClick={() => {
+                        setSelectedDomain(domain);
+                        setShowCheckout(true);
+                      }}
+                    >
+                      Buy
+                    </button>
                   </li>
                 ))}
               </ul>
               <button
                 type="button"
-                className="flex justify-center items-center w-full mt-6 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br from-white/10 to-white/20 enabled:hover:from-white/20 enabled:hover:to-white/30 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-offset-indigo-600 focus-visible:outline-white disabled:opacity-80"
+                className="flex justify-center items-center w-full mt-6 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br from-white/10 to-white/20 enabled:hover:from-white/20 enabled:hover:to-white/30 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-offset-primary-600 focus-visible:outline-white disabled:opacity-80"
                 disabled={loadingMore}
                 onClick={loadMoreDomains}
               >
@@ -336,7 +292,7 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
                           <div className="ml-3 flex h-7 items-center">
                             <button
                               type="button"
-                              className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600"
+                              className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600"
                               onClick={() => setShowOptions(false)}
                             >
                               <span className="sr-only">Close panel</span>
@@ -402,7 +358,7 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
                           <div className="ml-3 flex h-7 items-center">
                             <button
                               type="button"
-                              className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600"
+                              className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600"
                               onClick={() => setShowCheckout(false)}
                             >
                               <span className="sr-only">Close panel</span>
@@ -420,26 +376,30 @@ export function Main({ version }: { version: "normal" | "shopify" }) {
                           earn a commission at no additional cost to you. It
                           helps us to keep the site running!
                         </p>
-                        {affiliates.map((affiliate) => (
-                          <a
-                            key={affiliate.id}
-                            target="_blank"
-                            href={`${affiliate.href}${selectedDomain?.domain}`}
-                            className={`block bg-gradient-to-br ${affiliate.bg} rounded-xl p-8 h-28 focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600`}
-                            onClick={(event) => {
-                              // @ts-ignore
-                              event.target.href = `/api/redirect?href=${affiliate.href}${selectedDomain?.domain}`;
-                            }}
-                          >
-                            <span className="sr-only">{affiliate.name}</span>
-                            <Image
-                              className="w-full h-full object-contain pointer-events-none"
-                              alt=""
-                              src={affiliate.logo}
-                              loading="eager"
-                            />
-                          </a>
-                        ))}
+                        {[...affiliates]
+                          .sort(({ id }) =>
+                            theme === "shopify" && id === "SHOPIFY" ? -1 : 0
+                          )
+                          .map((affiliate) => (
+                            <a
+                              key={affiliate.id}
+                              target="_blank"
+                              href={`${affiliate.href}${selectedDomain?.domain}`}
+                              className={`block bg-gradient-to-br ${affiliate.bg} rounded-xl p-8 h-28 focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600`}
+                              onClick={(event) => {
+                                // @ts-ignore
+                                event.target.href = `/api/redirect?href=${affiliate.href}${selectedDomain?.domain}`;
+                              }}
+                            >
+                              <span className="sr-only">{affiliate.name}</span>
+                              <Image
+                                className="w-full h-full object-contain pointer-events-none"
+                                alt=""
+                                src={affiliate.logo}
+                                loading="eager"
+                              />
+                            </a>
+                          ))}
                       </div>
                     </div>
                   </Dialog.Panel>

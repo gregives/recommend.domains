@@ -34,9 +34,9 @@ export const metadata = {
 export default function Shopify() {
   return (
     <main>
-      <Main version="shopify" />
-      <Features version="shopify" />
-      <Blog />
+      <Main theme="shopify" />
+      <Features theme="shopify" />
+      <Blog theme="shopify" />
       <Footer />
     </main>
   );

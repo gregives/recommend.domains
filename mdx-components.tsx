@@ -5,7 +5,7 @@ import { Metadata } from "@/components/Metadata";
 export function Anchor(properties: JSX.IntrinsicElements["a"]) {
   return (
     <a
-      className="text-indigo-600 rounded focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-600"
+      className="text-primary-600 rounded focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600"
       {...properties}
     />
   );

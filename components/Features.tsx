@@ -4,7 +4,7 @@ import {
   ShoppingCartIcon,
 } from "@heroicons/react/24/outline";
 
-export function Features({ version }: { version: "normal" | "shopify" }) {
+export function Features({ theme }: { theme: "normal" | "shopify" }) {
   const features = [
     {
       name: "Available domains only",
@@ -12,7 +12,7 @@ export function Features({ version }: { version: "normal" | "shopify" }) {
         "We check with GoDaddy to make sure that all of the domain names we suggest to you are available. We don’t want to waste your time.",
       icon: DocumentCheckIcon,
     },
-    version === "shopify"
+    theme === "shopify"
       ? {
           name: "Buy direct from Shopify",
           description:
@@ -43,17 +43,17 @@ export function Features({ version }: { version: "normal" | "shopify" }) {
           <p className="mt-6 text-lg leading-8 text-gray-300">
             We use{" "}
             <a
-              className="text-indigo-400 rounded focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-200"
+              className="text-primary-400 rounded focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-200"
               href="https://openai.com/blog/chatgpt"
               target="_blank"
             >
               ChatGPT
             </a>{" "}
             to generate the perfect domain name for your{" "}
-            {version === "shopify" ? "Shopify store" : "website"} and we’ll
-            check the domain name with{" "}
+            {theme === "shopify" ? "Shopify store" : "website"} and we’ll check
+            the domain name with{" "}
             <a
-              className="text-indigo-400 rounded focus:outline-none focus-visible:outline-2 focus-visible:outline-indigo-200"
+              className="text-primary-400 rounded focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-200"
               href="https://www.godaddy.com/en-uk"
               target="_blank"
             >
@@ -68,7 +68,7 @@ export function Features({ version }: { version: "normal" | "shopify" }) {
               <div key={feature.name} className="flex flex-col">
                 <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">
                   <feature.icon
-                    className="h-5 w-5 flex-none text-indigo-400"
+                    className="h-5 w-5 flex-none text-primary-400"
                     aria-hidden="true"
                   />
                   {feature.name}

@@ -58,7 +58,7 @@ export function AdvancedOptions({
             {options.tlds.map((tld) => (
               <span
                 key={tld}
-                className="mx-1.5 my-1.5 inline-flex items-center rounded-xl bg-indigo-100 py-1.5 pl-2.5 pr-1.5 text-sm font-medium text-indigo-700"
+                className="mx-1.5 my-1.5 inline-flex items-center rounded-xl bg-primary-100 py-1.5 pl-2.5 pr-1.5 text-sm font-medium text-primary-700"
               >
                 {tld}
                 <button
@@ -69,7 +69,7 @@ export function AdvancedOptions({
                       tlds: options.tlds.filter((t) => t !== tld),
                     });
                   }}
-                  className="ml-1 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:bg-indigo-500 focus:text-white focus:outline-none"
+                  className="ml-1 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md text-primary-400 hover:bg-primary-200 hover:text-primary-500 focus:bg-primary-500 focus:text-white focus:outline-none"
                 >
                   <span className="sr-only">Remove {tld}</span>
                   <svg
@@ -91,7 +91,7 @@ export function AdvancedOptions({
         )}
         <div className="relative mt-2">
           <Combobox.Input
-            className="w-full border-0 bg-white rounded-xl pl-3 py-2 md:pl-4 md:py-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+            className="w-full border-0 bg-white rounded-xl pl-3 py-2 md:pl-4 md:py-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600"
             onChange={(event) => setQuery(event.target.value)}
             value={query}
             placeholder=".com"
@@ -111,7 +111,7 @@ export function AdvancedOptions({
                   className={({ active }) =>
                     classNames(
                       "relative cursor-default select-none pl-3 py-2 md:pl-4 md:py-3 pr-10",
-                      active ? "bg-indigo-600 text-white" : "text-gray-900"
+                      active ? "bg-primary-600 text-white" : "text-gray-900"
                     )
                   }
                 >
@@ -129,7 +129,7 @@ export function AdvancedOptions({
                         <span
                           className={classNames(
                             "absolute inset-y-0 right-0 flex items-center pr-3",
-                            active ? "text-white" : "text-indigo-600"
+                            active ? "text-white" : "text-primary-600"
                           )}
                         >
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -173,9 +173,9 @@ export function AdvancedOptions({
               value={option}
               className={({ active, checked }) =>
                 classNames(
-                  active ? "ring-2 ring-indigo-600 ring-offset-2" : "",
+                  active ? "ring-2 ring-primary-600 ring-offset-2" : "",
                   checked
-                    ? "bg-indigo-600 text-white hover:bg-indigo-500"
+                    ? "bg-primary-600 text-white hover:bg-primary-500"
                     : "ring-1 ring-inset ring-gray-300 bg-white text-gray-900 hover:bg-gray-50",
                   "cursor-pointer focus:outline-none flex items-center justify-center rounded-xl px-3 py-2 md:px-4 md:py-3 leading-5 text-base flex-1"
                 )
@@ -190,7 +190,7 @@ export function AdvancedOptions({
       </RadioGroup>
       <button
         onClick={onClose}
-        className="flex justify-center items-center shadow-lg shadow-indigo-600/20 w-full mt-6 py-2 px-4 font-display text-white rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-500 enabled:hover:from-indigo-500 enabled:hover:to-indigo-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-80"
+        className="flex justify-center items-center shadow-lg shadow-primary-600/20 w-full mt-6 py-2 px-4 font-display text-white rounded-xl bg-gradient-to-br from-primary-600 to-primary-500 enabled:hover:from-primary-500 enabled:hover:to-primary-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-80"
       >
         Save
       </button>
@@ -205,7 +205,7 @@ export function AdvancedOptions({
           <textarea
             rows={4}
             id={suggestionId}
-            className="block w-full resize-none rounded-xl px-3 py-2 md:px-4 md:py-3 border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+            className="block w-full resize-none rounded-xl px-3 py-2 md:px-4 md:py-3 border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600"
             onChange={(event) => setSuggestion(event.target.value)}
             value={suggestion}
           />
@@ -217,7 +217,7 @@ export function AdvancedOptions({
             title: "Suggestion for advanced options",
             body: suggestion,
           })}
-          className="flex justify-center items-center shadow-inner shadow-indigo-600/10 w-full mt-6 py-2 px-4 font-display text-indigo-800 rounded-xl bg-indigo-100 hover:bg-indigo-50 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-80"
+          className="flex justify-center items-center shadow-inner shadow-primary-600/10 w-full mt-6 py-2 px-4 font-display text-primary-800 rounded-xl bg-primary-100 hover:bg-primary-50 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-80"
         >
           Send suggestion
         </a>
