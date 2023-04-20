@@ -5,6 +5,7 @@ import {
   ReconnectInterval,
 } from "eventsource-parser";
 import { Options } from "@/components/AdvancedOptions";
+import { log } from "../log";
 
 export type Domain = {
   available: boolean;
@@ -171,6 +172,14 @@ export async function POST(request: NextRequest) {
                     )
                   );
                 }
+
+                log.queue(
+                  availableDomains.map((availableDomain) => ({
+                    description,
+                    suggestion: availableDomain.domain,
+                    options: JSON.stringify(options),
+                  }))
+                );
               }
             );
 
@@ -190,8 +199,8 @@ export async function POST(request: NextRequest) {
       // Wait for all availability checks to finish
       await Promise.all(pendingPromises);
 
-      // Wait a bit more for all the chunks to send
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Send logs
+      await log.flush();
 
       // Close the stream
       controller.close();
