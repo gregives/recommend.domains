@@ -387,8 +387,12 @@ export function Main({ theme }: { theme: "normal" | "shopify" }) {
                               href={`${affiliate.href}${selectedDomain?.domain}`}
                               className={`block bg-gradient-to-br ${affiliate.bg} rounded-xl p-8 h-28 focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600`}
                               onClick={(event) => {
+                                const encodedHref = encodeURIComponent(
+                                  affiliate.href + selectedDomain?.domain
+                                );
+
                                 // @ts-ignore
-                                event.target.href = `/api/redirect?href=${affiliate.href}${selectedDomain?.domain}`;
+                                event.target.href = `/api/redirect?href=${encodedHref}`;
                               }}
                             >
                               <span className="sr-only">{affiliate.name}</span>
