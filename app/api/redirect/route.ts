@@ -4,21 +4,23 @@ import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const href = searchParams.get("href");
+  const encodedHref = searchParams.get("href");
 
-  if (href === null) {
+  if (encodedHref === null) {
     redirect("/");
   }
 
+  const decodedHref = decodeURIComponent(encodedHref);
+
   const affiliate = affiliates.find((affiliate) =>
-    href.startsWith(affiliate.href)
+    decodedHref.startsWith(affiliate.href)
   );
 
   if (affiliate?.referral !== undefined) {
-    redirect(affiliate.referral + encodeURI(href));
+    redirect(affiliate.referral + encodeURI(decodedHref));
   }
 
-  redirect(href);
+  redirect(decodedHref);
 }
 
 export const runtime = "edge";

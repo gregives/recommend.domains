@@ -4,6 +4,7 @@ import googleLogo from "@/images/google.svg";
 import godaddyLogo from "@/images/godaddy.svg";
 import bluehostLogo from "@/images/bluehost.svg";
 import shopifyLogo from "@/images/shopify.svg";
+import hostingerLogo from "@/images/hostinger.svg";
 
 export const affiliates = [
   {
@@ -15,14 +16,6 @@ export const affiliates = [
     bg: "from-orange-100 to-orange-200 hover:from-orange-200 hover:to-orange-300",
   },
   {
-    id: "BLUEHOST",
-    name: "bluehost",
-    href: "https://www.bluehost.com/registration/?search=",
-    referral: process.env.BLUEHOST_REFERRAL_LINK,
-    logo: bluehostLogo,
-    bg: "from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300",
-  },
-  {
     id: "DOMAINCOM",
     name: "Domain.com",
     href: "https://www.domain.com/registration/?search=",
@@ -31,12 +24,28 @@ export const affiliates = [
     bg: "from-red-100 to-red-200 hover:from-red-200 hover:to-red-300",
   },
   {
+    id: "HOSTINGER",
+    name: "Hostinger",
+    href: "https://www.hostinger.co.uk/domain-name-search?REFERRALCODE=1GREG48&domain=",
+    referral: process.env.HOSTINGER_REFERRAL_LINK,
+    logo: hostingerLogo,
+    bg: "from-purple-100 to-purple-200 hover:from-purple-200 hover:to-purple-300",
+  },
+  {
     id: "SHOPIFY",
     name: "Shopify",
     href: "https://www.shopify.com/tools/domain-name-generator/search?query=",
     referral: process.env.SHOPIFY_REFERRAL_LINK,
     logo: shopifyLogo,
     bg: "from-lime-100 to-lime-200 hover:from-lime-200 hover:to-lime-300",
+  },
+  {
+    id: "BLUEHOST",
+    name: "bluehost",
+    href: "https://www.bluehost.com/registration/?search=",
+    referral: process.env.BLUEHOST_REFERRAL_LINK,
+    logo: bluehostLogo,
+    bg: "from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300",
   },
   {
     id: "GOOGLE",
