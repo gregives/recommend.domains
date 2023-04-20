@@ -26,7 +26,7 @@ export function Footer() {
       </h2>
       <div className="mx-auto max-w-7xl px-6 pb-8 lg:pb-16 lg:px-8">
         <div className="border-t border-black/10 dark:border-white/10 pt-8 flex items-center justify-between">
-          <p className="text-xs leading-5 text-gray-400">
+          <p className="text-xs leading-5 text-gray-500">
             &copy; {new Date().getFullYear()} Greg Ives. All rights reserved.
           </p>
           <div className="flex space-x-6">
