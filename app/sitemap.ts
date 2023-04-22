@@ -7,6 +7,7 @@ export const articles = [
   "how-to-choose-the-right-domain-name-extension",
   "the-benefits-of-using-a-shopify-domain-name-generator",
   "the-dos-and-donts-of-choosing-a-domain-name",
+  "how-to-optimize-your-shopify-domain-name-for-seo"
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
