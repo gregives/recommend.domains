@@ -1,6 +1,7 @@
 import { articles as slugs } from "@/app/sitemap";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRightIcon } from "@heroicons/react/20/solid";
 
 export async function BlogPreview({
   theme,
@@ -47,7 +48,8 @@ export async function BlogPreview({
                 href={`/blog/${featuredArticle.slug}`}
                 className="text-sm font-semibold leading-6 text-primary-600 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-200"
               >
-                Continue reading <span aria-hidden="true">&rarr;</span>
+                Continue reading{" "}
+                <ArrowRightIcon className="inline h-5 w-5" aria-hidden="true" />
               </Link>
             </div>
             <div className="flex lg:border-t lg:border-gray-900/10 lg:pt-8">
@@ -115,7 +117,8 @@ export async function BlogPreview({
                 href={theme === "shopify" ? "/shopify/blog" : "/blog"}
                 className="text-sm font-semibold leading-6 text-primary-600 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-200"
               >
-                View all articles <span aria-hidden="true">&rarr;</span>
+                View all articles{" "}
+                <ArrowRightIcon className="inline h-5 w-5" aria-hidden="true" />
               </Link>
             </div>
           </div>
