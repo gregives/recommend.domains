@@ -2,7 +2,7 @@ import { articles as slugs } from "@/app/sitemap";
 import Image from "next/image";
 import Link from "next/link";
 
-export async function Blog({
+export async function BlogPreview({
   theme,
 }: {
   theme: "normal" | "shopify";
@@ -110,6 +110,14 @@ export async function Blog({
                 </div>
               </article>
             ))}
+            <div className="pt-8">
+              <Link
+                href={theme === "shopify" ? "/shopify/blog" : "/blog"}
+                className="text-sm font-semibold leading-6 text-primary-600 rounded-full focus:outline-none focus-visible:outline-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-200"
+              >
+                View all articles <span aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

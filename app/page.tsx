@@ -1,5 +1,5 @@
 import { Features } from "@/components/Features";
-import { Blog } from "@/components/Blog";
+import { BlogPreview } from "@/components/BlogPreview";
 import { Footer } from "@/components/Footer";
 import { Main } from "@/components/Main";
 
@@ -8,7 +8,7 @@ export default function Home() {
     <main>
       <Main theme="normal" />
       <Features theme="normal" />
-      <Blog theme="normal" />
+      <BlogPreview theme="normal" />
       <Footer />
     </main>
   );
