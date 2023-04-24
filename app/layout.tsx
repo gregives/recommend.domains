@@ -3,12 +3,13 @@ import "./globals.css";
 
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import { Analytics } from "@vercel/analytics/react";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 
-const inter = Inter({
+const inter = localFont({
+  src: "../fonts/Inter.ttf",
   variable: "--font-inter",
   display: "swap",
-  subsets: ["latin"],
 });
 
 const spaceGrotesk = Space_Grotesk({
