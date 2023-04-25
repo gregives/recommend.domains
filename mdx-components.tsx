@@ -39,6 +39,18 @@ export function Paragraph(properties: JSX.IntrinsicElements["p"]) {
   return <p className="mb-6" {...properties} />;
 }
 
+export function OrderedList(properties: JSX.IntrinsicElements["ol"]) {
+  return <ul className="list-decimal" {...properties} />;
+}
+
+export function UnorderedList(properties: JSX.IntrinsicElements["ul"]) {
+  return <ul className="list-disc" {...properties} />;
+}
+
+export function ListItem(properties: JSX.IntrinsicElements["li"]) {
+  return <li className="my-3 ml-8 pl-4" {...properties} />;
+}
+
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     a: Anchor,
@@ -46,6 +58,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h2: Heading2,
     h3: Heading3,
     p: Paragraph,
+    ol: OrderedList,
+    ul: UnorderedList,
+    li: ListItem,
     CallToAction,
     Metadata,
     ...components,

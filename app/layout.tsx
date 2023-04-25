@@ -46,7 +46,7 @@ export const metadata = {
 };
 
 const setThemeColors = () => {
-  if (location.pathname === "/shopify") {
+  if (location.pathname.includes("shopify")) {
     localStorage.theme = "shopify";
   } else if (
     window.location.pathname === "/" ||
