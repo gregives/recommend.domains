@@ -238,17 +238,19 @@ export function Main({ theme }: { theme: "normal" | "shopify" }) {
                   </li>
                 ))}
               </ul>
-              <button
-                type="button"
-                className="flex justify-center items-center w-full mt-6 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br from-white/10 to-white/20 enabled:hover:from-white/20 enabled:hover:to-white/30 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-offset-primary-600 focus-visible:outline-white disabled:opacity-80"
-                disabled={loadingMore}
-                onClick={loadMoreDomains}
-              >
-                {loadingMore && (
-                  <ArrowPathIcon className="animate-spin mr-4 w-5 h-5" />
-                )}
-                Generate more
-              </button>
+              {!loadingInitial && (
+                <button
+                  type="button"
+                  className="flex justify-center items-center w-full mt-6 py-2.5 px-5 md:py-4 md:px-6 md:text-xl font-display text-white rounded-xl bg-gradient-to-br from-white/10 to-white/20 enabled:hover:from-white/20 enabled:hover:to-white/30 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-offset-primary-600 focus-visible:outline-white disabled:opacity-80"
+                  disabled={loadingMore}
+                  onClick={loadMoreDomains}
+                >
+                  {loadingMore && (
+                    <ArrowPathIcon className="animate-spin mr-4 w-5 h-5" />
+                  )}
+                  Generate more
+                </button>
+              )}
             </div>
           </div>
         )}
