@@ -16,7 +16,13 @@ import { AdvancedOptions, Options } from "@/components/AdvancedOptions";
 
 const textDecoder = new TextDecoder();
 
-export function Main({ theme }: { theme: "normal" | "shopify" }) {
+export function Main({
+  theme,
+  numberOfDomainsGenerated,
+}: {
+  theme: "normal" | "shopify";
+  numberOfDomainsGenerated: number;
+}) {
   const domains = useRef<Domain[]>([]);
   const [, setDomains] = useState<Domain[]>([]);
 
@@ -133,7 +139,8 @@ export function Main({ theme }: { theme: "normal" | "shopify" }) {
             <div className="flex flex-col items-center text-center">
               <div className="hidden sm:mb-8 sm:flex sm:justify-center">
                 <div className="relative rounded-full py-1 px-3 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10">
-                  More than 10,000 domain names generated
+                  {numberOfDomainsGenerated.toLocaleString()} domain names
+                  generated
                 </div>
               </div>
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl font-display">
