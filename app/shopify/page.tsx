@@ -2,6 +2,7 @@ import { Features } from "@/components/Features";
 import { BlogPreview } from "@/components/BlogPreview";
 import { Footer } from "@/components/Footer";
 import { Main } from "@/components/Main";
+import { log } from "../api/log";
 
 export const metadata = {
   title: "Shopify Domain Name Generator",
@@ -31,10 +32,15 @@ export const metadata = {
   },
 };
 
-export default function Shopify() {
+export default async function Shopify() {
+  const numberOfDomainsGenerated = await log.count();
+
   return (
     <main>
-      <Main theme="shopify" />
+      <Main
+        theme="shopify"
+        numberOfDomainsGenerated={numberOfDomainsGenerated}
+      />
       <Features theme="shopify" />
       <BlogPreview theme="shopify" />
       <Footer />

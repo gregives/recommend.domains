@@ -53,6 +53,7 @@ async function flush() {
 
   await fetch(`https://api.github.com/gists/${GIST_ID}`, {
     method: "PATCH",
+    cache: "no-store",
     headers: {
       Accept: "application/vnd.github+json",
       Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
@@ -67,7 +68,28 @@ async function flush() {
   });
 }
 
+async function count() {
+  const gist = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+    headers: {
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+    },
+    next: {
+      revalidate: 3600,
+    },
+  }).then((response) => response.json());
+
+  let numberOfDomainsGenerated = 10000;
+  for (const file of Object.values(gist.files)) {
+    // @ts-ignore
+    numberOfDomainsGenerated += file.content.split("\n").length - 1;
+  }
+
+  return numberOfDomainsGenerated;
+}
+
 export const log = {
+  count,
   flush,
   queue,
 };
