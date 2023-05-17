@@ -53,6 +53,7 @@ async function flush() {
 
   await fetch(`https://api.github.com/gists/${GIST_ID}`, {
     method: "PATCH",
+    cache: "no-store",
     headers: {
       Accept: "application/vnd.github+json",
       Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
@@ -72,6 +73,9 @@ async function count() {
     headers: {
       Accept: "application/vnd.github+json",
       Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+    },
+    next: {
+      revalidate: 3600,
     },
   }).then((response) => response.json());
 
