@@ -20,10 +20,18 @@ function queue(logsToQueue: Omit<Log, "timestamp">[]) {
   );
 }
 
+let numberOfDomainsGenerated = 0;
+
 async function flush() {
   const logsToSend = logs.splice(0, logs.length);
 
   if (logsToSend.length === 0) {
+    return;
+  }
+
+  if (process.env.GITHUB_TOKEN === undefined) {
+    // Used as a fallback in case process.env.GITHUB_TOKEN is undefined
+    numberOfDomainsGenerated += 1;
     return;
   }
 
@@ -69,6 +77,10 @@ async function flush() {
 }
 
 async function count() {
+  if (process.env.GITHUB_TOKEN === undefined) {
+    return numberOfDomainsGenerated;
+  }
+
   const gist = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
     headers: {
       Accept: "application/vnd.github+json",
@@ -79,7 +91,7 @@ async function count() {
     },
   }).then((response) => response.json());
 
-  let numberOfDomainsGenerated = 10000;
+  numberOfDomainsGenerated = 10000;
   for (const file of Object.values(gist.files)) {
     // @ts-ignore
     numberOfDomainsGenerated += file.content.split("\n").length - 1;
