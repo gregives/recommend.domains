@@ -37,7 +37,7 @@ OPENAI_API_KEY=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
 5. Paste the key and secret into the `.env.local` file:
 
 ```env
-OPENAI_API_KEY=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
+OPENAI_API_KEY=...
 GODADDY_URL=https://api.ote-godaddy.com
 GODADDY_API_KEY=3mM44UcgtKAewW_5rDWLN1QsnNhxD1uJ2kL55
 GODADDY_API_SECRET=UWAVgpM1kvWhkbCsvZfYhp
